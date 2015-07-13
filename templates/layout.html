@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Lisa's Grocery Store</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Coming+Soon' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='vegetables-752156_1280.jpg') }}">
+	{% block head %}
+	{% endblock %}
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="page-header">
+			<!-- Show Login or Logout-->
+			{% if username %}
+			<a href="{{url_for('gdisconnect')}}" class='login btn btn-default' role='button'>Logout</a>
+			{% else %}				
+			<a href="{{url_for('login')}}" class='login btn btn-default' role='button'>Login</a>
+			{% endif %}
+			<h1><a href={{url_for('showGroceryStore')}}>Lisa's Grocery Store</a></h1>
+		</div>
+		<div class="row" style="text-align:center">
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			{% for message in messages %}
+			<h3>{{ message }}</h3>
+		</br>
+		{% endfor %}
+		{% endif %}
+		{% endwith %}
+	</div>
+	{% block content %}
+	{% endblock %}
+</div>
+{% block footer %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="col-sm-2"></div>
+<div class="col-sm-4">
+<div class="inner" id="categories">
+	<h2>Product Categories</h2>
+	<a href = "{{url_for('newCategory')}}" class="add">Add a new product category</a>
+	<ul class="list-unstyled">
+		{% for category in categories %}
+		<li>			
+			<a href = "{{url_for('showCategory', category_name=category.name)}}">{{category.name}}</a>
+			<span class="editDelete"><a href = "{{url_for('editCategory', category_name=category.name)}}"> Edit | </a>
+				<a href = "{{url_for('deleteCategory', category_name=category.name)}}">Delete</a></span>
+			</li>
+			{% endfor %}
+		</ul>	
+	</div>
+</div>
+<div class="col-sm-4">
+	<div class="inner">
+		<h2>Products</h2>
+		{% include "products.html" %}
+	</div>
+</div>
+<div class="col-sm-2"></div>
+{% endblock %}
