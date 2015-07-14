@@ -39,4 +39,8 @@ Thumbs.db
 
 # Python generated files # 
 ##########################
-.pyc
+*.pyc
+
+# client secret #
+##################
+client_secret.json

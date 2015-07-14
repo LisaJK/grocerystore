@@ -12,7 +12,10 @@
 			<div>
 			Price: {{product.price}}
 			</div>
-			<div class="editDelete"><a href="{{url_for('editProduct', category_name=product.category_name, product_name=product.name)}}"> Edit | </a><a href="{{url_for('deleteProduct', category_name=product.category_name, product_name=product.name)}}">Delete</a></div>
+			<div class="editDelete"><a href="{{url_for('editProduct', product_name=product.name)}}"> Edit | </a><a href="{{url_for('deleteProduct', category_name=product.category_name, product_name=product.name)}}">Delete</a></div>
+			<div>
+			created by: {{product.user_id}}
+			</div>
 		</div>
 	</div>
 	<div class=col-sm-3>

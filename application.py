@@ -3,7 +3,7 @@ from flask import session as login_session
 from flask import make_response, flash, jsonify
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Product
+from database_setup import Base, Category, Product, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -22,48 +22,48 @@ CLIENT_ID = json.loads(
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
 
 
-# Connect to Database and create database session
+# Connect to the database and create a database session
 engine = create_engine('sqlite:///grocery_store.db')
 Base.metadata.bind = engine
-
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# JSON API to get info about all categories
 @app.route('/grocerystore/categories/JSON')
 def categoriesJSON():
+    """JSON API to get info about all categories."""
     categories = session.query(Category).all()
     return jsonify(categories=[c.serialize for c in categories])
 
 
-# JSON API to get info about all products
 @app.route('/grocerystore/products/JSON')
 def productsJSON():
+    """JSON API to get info about all products."""
     products = session.query(Product).all()
     return jsonify(products=[p.serialize for p in products])
 
 
-# JSON API to get info about a given category
 @app.route('/grocerystore/<category_name>/products/JSON')
 def categoryJSON(category_name):
+    """JSON API to get info about a given category."""
     session.query(Category).filter_by(name=category_name).one()
     products = session.query(Product).filter_by(
         category_name=category_name).all()
     return jsonify(products=[p.serialize for p in products])
 
 
-# JSON API to get info about a given product and category
 @app.route('/grocerystore/<category_name>/<product_name>/JSON')
 def productJSON(category_name, product_name):
+    """JSON API to get info about a given product and category."""
     product = session.query(Product).filter_by(name=product_name).one()
     return jsonify(product=product.serialize)
 
 
-# XML API to get info about all categories
 @app.route('/grocerystore/categories/XML')
 def categoriesXML():
+    """XML API to get info about all categories."""
     allCategories = session.query(Category).all()
+    # Build up the XML tree
     categories = ET.Element('categories')
     for category in allCategories:
         cat = ET.SubElement(categories, 'category')
@@ -79,10 +79,11 @@ def categoriesXML():
     return response
 
 
-# XML API to get info about all products
 @app.route('/grocerystore/products/XML')
 def productsXML():
+    """XML API to get info about all products."""
     allProducts = session.query(Product).all()
+    # Build up the XML tree
     products = ET.Element('products')
     for product in allProducts:
         prod = ET.SubElement(products, 'product')
@@ -102,12 +103,13 @@ def productsXML():
     return response
 
 
-# XML API to get info about a given category
 @app.route('/grocerystore/<category_name>/products/XML')
 def categoryXML(category_name):
+    """XML API to get info about a given category."""
     session.query(Category).filter_by(name=category_name).one()
     allProducts = session.query(Product).filter_by(
         category_name=category_name).all()
+    # Build up the XML tree
     products = ET.Element('products')
     for product in allProducts:
         prod = ET.SubElement(products, 'product')
@@ -127,10 +129,11 @@ def categoryXML(category_name):
     return response
 
 
-# XML API to get info about a given product and category
 @app.route('/grocerystore/<category_name>/<product_name>/XML')
 def productXML(category_name, product_name):
+    """XML API to get info about a given product and category."""
     product = session.query(Product).filter_by(name=product_name).one()
+    # Build up the XML tree
     prod = ET.Element('product')
     name = ET.SubElement(prod, 'name')
     name.text = product.name
@@ -150,10 +153,15 @@ def productXML(category_name, product_name):
 
 @app.route('/login/')
 def login():
-    # Create anti forgery token and save for valnameation
+    """Login function which creates and saves an
+       anti forgery token, renders the login page and
+       starts the login process."""
+    # Create anti forgery token and save for validation
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
+    # redirect to the main page after logging in
+    # TODO redirect to different pages
     redirect_to = url_for('showGroceryStore')
     if 'redirect_to' in login_session.keys():
         redirect_to = login_session['redirect_to']
@@ -164,10 +172,10 @@ def login():
                            REDIRECT_TO=redirect_to)
 
 
-# Show the grocerystore with all categories
 @app.route('/')
 @app.route('/grocerystore/')
 def showGroceryStore():
+    """Show the grocerystore with all categories."""
     categories = session.query(Category).order_by(asc(Category.name))
     products = session.query(Product).order_by(asc(Product.category_name))
     username = getUsername()
@@ -177,9 +185,9 @@ def showGroceryStore():
                            username=username)
 
 
-# Show the products of a category
 @app.route('/grocerystore/<category_name>/products/')
 def showCategory(category_name):
+    """Show the products of a given category."""
     category = session.query(Category).filter_by(name=category_name).one()
     products = session.query(Product).filter_by(
         category_name=category.name).all()
@@ -190,9 +198,9 @@ def showCategory(category_name):
                            username=username)
 
 
-# Show one product of a category
 @app.route('/grocerystore/<category_name>/<product_name>')
 def showProduct(category_name, product_name):
+    """Show one given product of a given category."""
     product = session.query(Product).filter_by(
         category_name=category_name, name=product_name).one()
     category = session.query(Category).filter_by(name=category_name).one()
@@ -203,15 +211,16 @@ def showProduct(category_name, product_name):
                            username=username)
 
 
-# Create a new category
 @app.route('/grocerystore/newcategory/', methods=['GET', 'POST'])
 def newCategory():
+    """Create a new category."""
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('newCategory')
         return redirect(url_for('login'))
     if request.method == 'POST':
         newCategory = Category(name=request.form['name'],
-                               description=request.form['description'])
+                               description=request.form['description'],
+                               user_id=login_session['user_id'])
         # TODO do not create a category that is already existing
         session.add(newCategory)
         session.commit()
@@ -223,9 +232,9 @@ def newCategory():
                                category=None)
 
 
-# Create a new product
 @app.route('/grocerystore/newproduct/', methods=['GET', 'POST'])
 def newProduct():
+    """Create a new product."""
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('newProduct')
         return redirect(url_for('login'))
@@ -238,7 +247,8 @@ def newProduct():
         newProduct = Product(name=name,
                              description=description,
                              price=price,
-                             category_name=category_name)
+                             category_name=category_name,
+                             user_id=login_session['user_id'])
         # TODO do not create an product that is already existing for the cat
         session.add(newProduct)
         session.commit()
@@ -252,12 +262,14 @@ def newProduct():
                                username=username)
 
 
-# Delete a category
 @app.route('/grocerystore/<category_name>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_name):
+    """Delete the given category and its connected products."""
     if 'username' not in login_session.keys():
-        login_session['redirect_to'] = url_for('deleteCategory')
+        login_session['redirect_to'] = url_for('deleteCategory',
+                                               category_name=category_name)
         return redirect(url_for('login'))
+
     deletedCategory = (session.query(Category).filter_by(
         name=category_name).one())
     if request.method == 'POST':
@@ -270,16 +282,21 @@ def deleteCategory(category_name):
         session.commit()
         return redirect(url_for('showGroceryStore'))
     else:
-        username = getUsername()
-        return render_template('deleteCategory.html',
-                               category=deletedCategory,
-                               username=username)
+        # check whether the user is the owner
+        if deletedCategory.user_id == login_session['user_id']:
+            username = getUsername()
+            return render_template('deleteCategory.html',
+                                   category=deletedCategory,
+                                   username=username)
+        else:
+            flash("You are not allowed to delete the category!")
+            return redirect(url_for('showGroceryStore'))
 
 
-# Delete a product of a category
 @app.route('/grocerystore/<category_name>/<product_name>/delete/',
            methods=['GET', 'POST'])
 def deleteProduct(category_name, product_name):
+    """Delete a given product of a category."""
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('deleteProduct')
         return redirect(url_for('login'))
@@ -290,15 +307,21 @@ def deleteProduct(category_name, product_name):
         session.commit()
         return redirect(url_for('showCategory', category_name=category_name))
     else:
-        username = getUsername()
-        return render_template('deleteProduct.html',
-                               product=deletedProduct,
-                               username=username)
+        # check whether the user is the owner
+        if deletedProduct.user_id == login_session['user_id']:
+            username = getUsername()
+            return render_template('deleteProduct.html',
+                                   product=deletedProduct,
+                                   username=username,
+                                   category_name=category_name)
+        else:
+            flash("You are not allowed to delete the product!")
+            return redirect(url_for('showGroceryStore'))
 
 
-# Edit a category
 @app.route('/grocerystore/<category_name>/edit/', methods=['GET', 'POST'])
 def editCategory(category_name):
+    """Edit a given category."""
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('editCategory',
                                                category_name=category_name)
@@ -311,19 +334,23 @@ def editCategory(category_name):
             editedCategory.name = request.form['name']
             return redirect(url_for('showGroceryStore'))
     else:
-        products = (session.query(Product).filter_by(
-            category_name=editedCategory.name).all())
-        username = getUsername()
-        return render_template('editCategory.html',
-                               category=editedCategory,
-                               username=username,
-                               products=products)
+        if editedCategory.user_id == login_session['user_id']:
+            products = (session.query(Product).filter_by(
+                        category_name=editedCategory.name).all())
+            username = getUsername()
+            return render_template('editCategory.html',
+                                   category=editedCategory,
+                                   username=username,
+                                   products=products)
+        else:
+            flash("You are not allowed to edit the category!")
+            return redirect(url_for('showGroceryStore'))
 
 
-# Edit an product of a category
 @app.route('/grocerystore/editproduct/<product_name>/',
            methods=['GET', 'POST'])
 def editProduct(product_name):
+    """Edit a given product."""
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('editProduct',
                                                product_name=product_name)
@@ -334,24 +361,31 @@ def editProduct(product_name):
         if request.form['name']:
             # TODO do not create an product that is already existing
             editedProduct.name = request.form['name']
+        if request.form['description']:
             editedProduct.description = request.form['description']
+        if request.form['price']:
             editedProduct.price = request.form['price']
-            editedProduct.category_name = request.form['category_name']
+        if request.form['category']:
+            editedProduct.category_name = request.form['category']
 
-            return redirect(url_for('showCategory',
-                                    category_name=editedProduct.category_name))
+        return redirect(url_for('showCategory',
+                                category_name=editedProduct.category_name))
     else:
-        username = getUsername()
-        categories = session.query(Category).order_by(asc(Category.name))
-        return render_template('editProduct.html',
-                               product=editedProduct,
-                               categories=categories,
-                               username=username)
+        if editedProduct.user_id == login_session['user_id']:
+            username = getUsername()
+            categories = session.query(Category).order_by(asc(Category.name))
+            return render_template('editProduct.html',
+                                   product=editedProduct,
+                                   categories=categories,
+                                   username=username)
+        else:
+            flash("You are not allowed to edit the product!")
+            return redirect(url_for('showGroceryStore'))
 
 
-# Login the user by Google Sign In
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """Login the user by Google Sign In."""
 
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -420,25 +454,35 @@ def gconnect():
     data = answer.json()
 
     login_session['username'] = data['name']
+
+    # in case name is not set, use the email
+    if not data['name']:
+        login_session['username'] = data['email']
+
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # See if a user exists, if it doesn't make a new one
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
+    output += '<h2>Welcome!</h2>'
+    output += '<h3>' + login_session['username'] + '</h3>'
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;'
     output += 'border-radius: 150px;-webkit-border-radius: 150px;'
     output += '-moz-border-radius: 150px;"> '
-    flash('Welcome, ' + login_session['username']+'!')
+    flash('Welcome, ' + login_session['username'] + '!')
     return output
 
 
-# Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
+    """Revoke a current user's token and reset their login_session."""
     # Only disconnect a connected user.
     if login_session.get('credentials') is None:
         response = make_response(
@@ -460,14 +504,17 @@ def gdisconnect():
                % refresh_token)
         result = h.request(url, 'GET')[0]
 
-    # Reset the user's session.
-    del login_session['credentials']
-    del login_session['gplus_id']
-    del login_session['username']
-    del login_session['email']
-    del login_session['picture']
-
     if result['status'] == '200':
+        # Reset the user's session.
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
         flash('Logged out successfully!')
         return redirect(url_for('showGroceryStore'))
     else:
@@ -478,7 +525,37 @@ def gdisconnect():
         return response
 
 
+def createUser(login_session):
+    """Create a new user in the database."""
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'],
+                   picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    """Returns a user of the given user_id."""
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    """Returns the user id connected to the given email
+       or None if the email is not existing in the
+       database yet."""
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 def getUsername():
+    """Returns the username if already in the
+       login_session, otherwise None."""
     username = None
     if 'username' in login_session.keys():
         username = login_session['username']
@@ -486,6 +563,7 @@ def getUsername():
 
 
 if __name__ == '__main__':
+    # this has to be changed in production...
     app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

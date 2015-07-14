@@ -7,7 +7,7 @@
 	{% for product in products %}
 	<li>
 		<a href = "{{url_for('showProduct', category_name=product.category_name, product_name=product.name)}}">{{product.name}}</a>
-		<span class="editDelete"><a href = "{{url_for('editProduct', category_name=product.category_name, product_name=product.name)}}"> Edit | </a>
+		<span class="editDelete"><a href = "{{url_for('editProduct', product_name=product.name)}}"> Edit | </a>
 		<a href = "{{url_for('deleteProduct', category_name=product.category_name, product_name=product.name)}}">Delete</a></span>
 	</li>
 	{% endfor %}

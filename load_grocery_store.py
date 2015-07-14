@@ -18,9 +18,9 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-user1 = User(name="Emma")
-user2 = User(name="Paula")
-user3 = User(name="Frida")
+user1 = User(name="Emma Kugler", email="emma.kugler@googlemail.com")
+user2 = User(name="Paula Kugler", email="paula.kugler@googlemail.com")
+user3 = User(name="Frida Kugler", email="frida.kugler@googlemail.com")
 
 # Category Soccer
 category1 = Category(name="fruits and vegetables",
