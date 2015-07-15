@@ -156,10 +156,6 @@ def login():
     """Login function which creates and saves an
        anti forgery token, renders the login page and
        starts the login process."""
-    # Create anti forgery token and save for validation
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
-    login_session['state'] = state
     # redirect to the main page after logging in
     # TODO redirect to different pages
     redirect_to = url_for('showGroceryStore')
@@ -167,7 +163,6 @@ def login():
         redirect_to = login_session['redirect_to']
         del login_session['redirect_to']
     return render_template('login.html',
-                           STATE=state,
                            CLIENT_ID=CLIENT_ID,
                            REDIRECT_TO=redirect_to)
 
@@ -387,11 +382,6 @@ def editProduct(product_name):
 def gconnect():
     """Login the user by Google Sign In."""
 
-    # Validate state token
-    if request.args.get('state') != login_session['state']:
-        response = make_response(json.dumps('Invalid state parameter.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
     # Obtain authorization code
     code = request.data
 
@@ -561,6 +551,36 @@ def getUsername():
         username = login_session['username']
     return username
 
+
+@app.before_request
+def csrf_protect():
+    """If a POST does not contain a csrf token
+       or contains a wrong csrf token
+       a Forbidden is raised."""
+    if request.method == "POST":
+        token = login_session.pop('state', None)
+        if not token or(token != request.form.get('state')
+                        and token != request.args.get('state')):
+            response = make_response(json.dumps('Invalid state parameter.'),
+                                     403)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+
+
+def generate_csrf_token():
+    """Creates a csrf token."""
+    if 'state' not in login_session:
+        login_session['state'] = get_random_string()
+    return login_session['state']
+
+
+def get_random_string():
+    """ Creates an uppercase random string"""
+    return ''.join(random.choice(string.ascii_uppercase + string.digits)
+                   for x in xrange(32))
+
+
+app.jinja_env.globals['state'] = generate_csrf_token
 
 if __name__ == '__main__':
     # this has to be changed in production...

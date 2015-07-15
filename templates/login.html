@@ -44,7 +44,7 @@ function signInCallback(authResult) {
     // write a 'login successful' message to the web page and then redirect
     $.ajax({
      type: 'POST',
-      url: '/gconnect?state={{STATE}}',
+      url: '/gconnect?state={{state()}}',
       processData: false,
       data: authResult['code'],
       contentType: 'application/octet-stream; charset=utf-8',

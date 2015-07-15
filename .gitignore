@@ -44,3 +44,7 @@ Thumbs.db
 # client secret #
 ##################
 client_secret.json
+
+# Database #
+############
+grocery_store.db

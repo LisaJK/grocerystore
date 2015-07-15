@@ -1,6 +1,6 @@
 {% if category %}
 	<a href = "{{url_for('newProduct', category_name=category.name)}}" class="add">Add a new product</a>
-{% else %}
+{% elif categories %}
 	<a href = "{{url_for('newProduct')}}" class="add">Add a new product</a>
 {% endif %}
 <ul class="list-unstyled">
