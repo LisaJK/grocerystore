@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import session as login_session
-from flask import make_response, flash, jsonify
+from flask import make_response, flash, jsonify, send_from_directory
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Product, User
@@ -12,14 +12,23 @@ import requests
 import random
 import string
 import xml.etree.ElementTree as ET
+from werkzeug import secure_filename
+import os
 
 
 app = Flask(__name__)
 
+# client id given by Google
 CLIENT_ID = json.loads(
     open('client_secret.json', 'r').read())['web']['client_id']
 
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
+
+# Used for the product image uploads
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 
 # Connect to the database and create a database session
@@ -73,34 +82,18 @@ def categoriesXML():
         description.text = category.description
         user_id = ET.SubElement(cat, 'user_id')
         user_id.text = str(category.user_id)
-    output = XML_VERSION + ET.tostring(categories)
-    response = make_response(output, 200)
-    response.headers['Content-Type'] = 'application/xml'
-    return response
+    return createXMLResponse(categories)
 
 
 @app.route('/grocerystore/products/XML')
 def productsXML():
     """XML API to get info about all products."""
     allProducts = session.query(Product).all()
-    # Build up the XML tree
     products = ET.Element('products')
     for product in allProducts:
-        prod = ET.SubElement(products, 'product')
-        name = ET.SubElement(prod, 'name')
-        name.text = product.name
-        description = ET.SubElement(prod, 'description')
-        description.text = product.description
-        price = ET.SubElement(prod, 'price')
-        price.text = product.price
-        category = ET.SubElement(prod, 'category')
-        category.text = product.category_name
-        user_id = ET.SubElement(prod, 'user_id')
-        user_id.text = str(product.user_id)
-    output = XML_VERSION + ET.tostring(products)
-    response = make_response(output, 200)
-    response.headers['Content-Type'] = 'application/xml'
-    return response
+        prod = buildProductXML(product)
+        products.append(prod)
+    return createXMLResponse(products)
 
 
 @app.route('/grocerystore/<category_name>/products/XML')
@@ -109,31 +102,23 @@ def categoryXML(category_name):
     session.query(Category).filter_by(name=category_name).one()
     allProducts = session.query(Product).filter_by(
         category_name=category_name).all()
-    # Build up the XML tree
     products = ET.Element('products')
     for product in allProducts:
-        prod = ET.SubElement(products, 'product')
-        name = ET.SubElement(prod, 'name')
-        name.text = product.name
-        description = ET.SubElement(prod, 'description')
-        description.text = product.description
-        price = ET.SubElement(prod, 'price')
-        price.text = product.price
-        category = ET.SubElement(prod, 'category')
-        category.text = product.category_name
-        user_id = ET.SubElement(prod, 'user_id')
-        user_id.text = str(product.user_id)
-    output = XML_VERSION + ET.tostring(products)
-    response = make_response(output, 200)
-    response.headers['Content-Type'] = 'application/xml'
-    return response
+        prod = buildProductXML(product)
+        products.append(prod)
+    return createXMLResponse(products)
 
 
 @app.route('/grocerystore/<category_name>/<product_name>/XML')
 def productXML(category_name, product_name):
     """XML API to get info about a given product and category."""
     product = session.query(Product).filter_by(name=product_name).one()
-    # Build up the XML tree
+    prod = buildProductXML(product)
+    return createXMLResponse(prod)
+
+
+def buildProductXML(product):
+    """ Builds up the XML tree for a product."""
     prod = ET.Element('product')
     name = ET.SubElement(prod, 'name')
     name.text = product.name
@@ -141,11 +126,18 @@ def productXML(category_name, product_name):
     description.text = product.description
     price = ET.SubElement(prod, 'price')
     price.text = product.price
+    image = ET.SubElement(prod, 'image')
+    image.text = product.image_file_name,
     category = ET.SubElement(prod, 'category')
     category.text = product.category_name
     user_id = ET.SubElement(prod, 'user_id')
     user_id.text = str(product.user_id)
-    output = XML_VERSION + ET.tostring(prod)
+    return prod
+
+
+def createXMLResponse(tree):
+    """Creates the xml response out of the given tree."""
+    output = XML_VERSION + ET.tostring(tree)
     response = make_response(output, 200)
     response.headers['Content-Type'] = 'application/xml'
     return response
@@ -238,11 +230,20 @@ def newProduct():
         description = request.form['description']
         price = request.form['price']
         category_name = request.form['category']
+        filename = None
+        file = request.files['image']
+        # check if the file is one of the allowed types/extensions
+        if file and allowed_file(file.filename):
+            # remove unsupported chars
+            filename = secure_filename(file.filename)
+            # save the file
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         newProduct = Product(name=name,
                              description=description,
                              price=price,
                              category_name=category_name,
+                             image_file_name=filename,
                              user_id=login_session['user_id'])
         # TODO do not create an product that is already existing for the cat
         session.add(newProduct)
@@ -272,6 +273,10 @@ def deleteCategory(category_name):
         deletedProducts = (session.query(Product).filter_by(
             category_name=deletedCategory.name).all())
         for product in deletedProducts:
+            # delete all images of the products
+            if product.image_file_name:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
+                                   product.image_file_name))
             session.delete(product)
         session.delete(deletedCategory)
         session.commit()
@@ -298,6 +303,10 @@ def deleteProduct(category_name, product_name):
     deletedProduct = (session.query(Product).filter_by(
         name=product_name, category_name=category_name).one())
     if request.method == 'POST':
+        # delete the image of the product
+        if deletedProduct.image_file_name:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
+                                   deleteProduct.image_file_name))
         session.delete(deletedProduct)
         session.commit()
         return redirect(url_for('showCategory', category_name=category_name))
@@ -362,6 +371,22 @@ def editProduct(product_name):
             editedProduct.price = request.form['price']
         if request.form['category']:
             editedProduct.category_name = request.form['category']
+        # delete old image if existing ...
+        if editedProduct.image_file_name:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
+                                   editedProduct.image_file_name))
+            editedProduct.image_file_name = None
+        # ... and save the new one
+        if request.files['image']:
+            filename = None
+            file = request.files['image']
+            # check if the image file is one of the allowed types/extensions
+            if allowed_file(file.filename):
+                # remove unsupported chars
+                filename = secure_filename(file.filename)
+                # save the image file
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                editedProduct.image_file_name = filename
 
         return redirect(url_for('showCategory',
                                 category_name=editedProduct.category_name))
@@ -552,6 +577,20 @@ def getUsername():
     return username
 
 
+def allowed_file(filename):
+    """Returns True if the filename has an allowed extension."""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@app.route('/uploads/<path:filename>')
+def uploads(filename):
+    """Locates the given file in the upload directory and shows
+       it in the browser."""
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
+
 @app.before_request
 def csrf_protect():
     """If a POST does not contain a csrf token
@@ -578,7 +617,6 @@ def get_random_string():
     """ Creates an uppercase random string"""
     return ''.join(random.choice(string.ascii_uppercase + string.digits)
                    for x in xrange(32))
-
 
 app.jinja_env.globals['state'] = generate_csrf_token
 

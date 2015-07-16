@@ -1,4 +1,4 @@
-<form class="form" action="" method = "post" role="form">
+<form class="form" action="" method = "post" role="form" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="name">Name:</label>
 		<input id="productname" type ="text" name="name" class="form-control" value="{{product.name}}" required>
@@ -20,6 +20,11 @@
 		</select>
 	</div>
 	<div class="form-group">
+		<label for="image">Image:</label>
+		<div>{{product.image_file_name}}" or choose a new image:</div>
+		<input type ="file" name="image" class="form-control" id="image">
+	</div>
+	<div class="form-group">
 		<button type="submit" id="submit" class="btn btn-default">Save</button>
 		<a href="{{url_for('showGroceryStore')}}"><input type="button" value="Cancel" class="btn btn-default"></a>
 		<input type="hidden" name="state" value="{{state()}}">
@@ -34,5 +39,6 @@
    	    {% else %}
 			$('#category option:first-child').attr("selected", "selected");
    	    {% endif %}
+}) 
     });
 </script>

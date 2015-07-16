@@ -35,6 +35,7 @@ product1 = Product(
     description="an apple is an apple",
     price="2.50 EUR/KG",
     category=category1,
+    image_file_name="IMG_20120808_164643.jpg",
     user=user1)
 
 session.add(product1)
@@ -45,6 +46,7 @@ product2 = Product(
     description="a peach is a peach",
     price="3.00 EUR/KG",
     category=category1,
+    image_file_name="IMG_20120808_164643.jpg",
     user=user2)
 
 session.add(product2)
@@ -61,6 +63,7 @@ product3 = Product(
     description="milk is milk",
     price="1.20 EUR/l",
     category=category2,
+    image_file_name="IMG_20120808_164643.jpg",
     user=user3)
 
 session.add(product3)
@@ -71,6 +74,7 @@ product4 = Product(
     description="butter is butter",
     price="1.50 EUR",
     category=category2,
+    image_file_name="IMG_20120808_164643.jpg",
     user=user2)
 
 session.add(product4)

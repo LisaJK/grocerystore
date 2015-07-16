@@ -56,6 +56,7 @@ class Product(Base):
     name = Column(String(80), primary_key=True)
     description = Column(String(250))
     price = Column(String(20))
+    image_file_name = Column(String(250))
     category_name = Column(Integer,
                            ForeignKey('category.name'))
     category = relationship(Category)
@@ -69,6 +70,7 @@ class Product(Base):
             'name': self.name,
             'description': self.description,
             'price': self.price,
+            'image_file_name': self.image_file_name,
             'category_name': self.category_name,
             'user_id': self.user_id
         }
