@@ -18,7 +18,7 @@
 		<div class="page-header">
 			<!-- Show Login or Logout-->
 			{% if username %}
-			<a href="{{url_for('gdisconnect')}}" class='login btn btn-default' role='button'>Logout</a>
+			<a href="{{url_for('logout')}}" class='login btn btn-default' role='button'>Logout</a>
 			{% else %}				
 			<a href="{{url_for('login')}}" class='login btn btn-default' role='button'>Login</a>
 			{% endif %}

@@ -19,8 +19,16 @@ import os
 app = Flask(__name__)
 
 # client id given by Google
-CLIENT_ID = json.loads(
-    open('client_secret.json', 'r').read())['web']['client_id']
+GOOGLE_CLIENT_ID = json.loads(
+    open('client_secret_g.json', 'r').read())['web']['client_id']
+
+FB_APP_ID = json.loads(
+    open('client_secret_fb.json', 'r').read())['app_id']
+
+FB_APP_SECRET = json.loads(
+    open('client_secret_fb.json', 'r').read())['client_secret']
+
+URL_FB_LTT = "https://graph.facebook.com/oauth/access_token"
 
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
 
@@ -154,8 +162,9 @@ def login():
     if 'redirect_to' in login_session.keys():
         redirect_to = login_session['redirect_to']
         del login_session['redirect_to']
+    # TODO Facebook Integration
     return render_template('login.html',
-                           CLIENT_ID=CLIENT_ID,
+                           CLIENT_ID=GOOGLE_CLIENT_ID,
                            REDIRECT_TO=redirect_to)
 
 
@@ -276,7 +285,7 @@ def deleteCategory(category_name):
             # delete all images of the products
             if product.image_file_name:
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   product.image_file_name))
+                          product.image_file_name))
             session.delete(product)
         session.delete(deletedCategory)
         session.commit()
@@ -403,16 +412,67 @@ def editProduct(product_name):
             return redirect(url_for('showGroceryStore'))
 
 
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+    """Login the user by Facebook Sign In."""
+# 1. obtain authorization code and upgrade it to a credentials object
+# 2. check that the access token is valid
+# 3. verify that the access token is used for the intended user
+# 4. verify that the access token is valid for this app
+# 5. store the credentials in the session for later use
+# 6. if user is not known yet, create a new user in the database
+# 7. create and return the output
+
+    # Obtain the long-term access token
+    params = {'fb_exchange_token': request.data,
+              'client_id': FB_APP_ID,
+              'client_secret': FB_APP_SECRET,
+              'grant_type': 'fb_exchange_token'}
+    answer = requests.get(URL_FB_LTT, params=params)
+    access_token = answer.content
+    access_token = access_token.strip("access_token=")
+    access_token = access_token.split("&")[0]
+
+    # Get user info
+    userinfo_url = "https://graph.facebook.com/me"
+    params = {'access_token': access_token,
+              'fields': 'name,email',
+              'alt': 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = answer.json()
+    name = data['name']
+    user_id = data['id']
+    email = data['email']
+
+    # Get the picture
+    # TODO URL JOIN
+    picture_url = "https://graph.facebook.com/v2.4/" + user_id + "/picture"
+    print picture_url
+    params = {'access_token': access_token,
+              'alt': 'json',
+              'redirect': 'false',
+              'size': 'large'}
+    answer = requests.get(picture_url, params=params)
+    data = answer.json()
+    picture = data['data']['url']
+
+    storeUserData(username=name,
+                  email=email,
+                  picture=picture,
+                  fb_access_token=access_token,
+                  user_id=user_id)
+
+    return createLoginOutput()
+
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     """Login the user by Google Sign In."""
-
     # Obtain authorization code
     code = request.data
-
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secret.json', scope='')
+        oauth_flow = flow_from_clientsecrets('client_secret_g.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -435,31 +495,28 @@ def gconnect():
         return response
 
     # Verify that the access token is used for the intended user.
-    gplus_id = credentials.id_token['sub']
-    if result['user_id'] != gplus_id:
+    user_id = credentials.id_token['sub']
+    if result['user_id'] != user_id:
         response = make_response(
             json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Verify that the access token is valid for this app.
-    if result['issued_to'] != CLIENT_ID:
+    if result['issued_to'] != GOOGLE_CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
+    # Check if the user is already connected.
     stored_credentials = login_session.get('credentials')
-    stored_gplus_id = login_session.get('gplus_id')
-    if stored_credentials is not None and gplus_id == stored_gplus_id:
+    stored_user_id = login_session.get('user_id')
+    if stored_credentials is not None and user_id == stored_user_id:
         response = make_response(json.dumps(
             'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
-
-    # Store the credentials for later use.
-    login_session['credentials'] = credentials.to_json()
-    login_session['gplus_id'] = gplus_id
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -468,43 +525,91 @@ def gconnect():
 
     data = answer.json()
 
-    login_session['username'] = data['name']
+    storeUserData(username=data['name'],
+                  email=data['email'],
+                  picture=data['picture'],
+                  google_credentials=credentials,
+                  user_id=user_id)
+
+    return createLoginOutput()
+
+
+def storeUserData(username,
+                  email,
+                  picture,
+                  user_id,
+                  google_credentials=None,
+                  fb_access_token=None):
+    """Validates and stores the user data
+       given by Google or Facebook"""
+    login_session['username'] = username
 
     # in case name is not set, use the email
-    if not data['name']:
-        login_session['username'] = data['email']
+    if not username:
+        login_session['username'] = email
 
-    login_session['picture'] = data['picture']
-    login_session['email'] = data['email']
+    login_session['picture'] = picture
+    login_session['email'] = email
 
-    # See if a user exists, if it doesn't make a new one
+    if google_credentials:
+        login_session['google_credentials'] = google_credentials.to_json()
+    elif fb_access_token:
+        login_session['fb_access_token'] = fb_access_token
+
+    login_session['user_id'] = user_id
+
+    # Check if a user exists and if not make a new one
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
+
+def createLoginOutput():
+    """Creates the login output."""
     output = ''
     output += '<h2>Welcome!</h2>'
     output += '<h3>' + login_session['username'] + '</h3>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;'
+    output += ' " style = "width: 100px; height: 100px;'
     output += 'border-radius: 150px;-webkit-border-radius: 150px;'
     output += '-moz-border-radius: 150px;"> '
     flash('Welcome, ' + login_session['username'] + '!')
     return output
 
 
+@app.route('/logout')
+def logout():
+    """Logout a user (Google or Facebook)"""
+    if login_session.get('google_credentials'):
+        gdisconnect()
+    else:
+        fbdisconnect()
+    return make_response('Successfully disconnected.', 200)
+
+
+@app.route('/fbdisconnect')
+def fbdisconnect():
+    # TODO FACEBOOK DISCONNECT MISSING
+    del login_session['fb_access_token']
+    del login_session['user_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    return make_response('Successfully disconnected.', 200)
+
+
 @app.route('/gdisconnect')
 def gdisconnect():
     """Revoke a current user's token and reset their login_session."""
     # Only disconnect a connected user.
-    if login_session.get('credentials') is None:
+    if login_session.get('google_credentials') is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    credentials = json.loads(login_session.get('credentials'))
+    credentials = json.loads(login_session.get('google_credentials'))
     access_token = credentials['access_token']
 
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
@@ -521,8 +626,8 @@ def gdisconnect():
 
     if result['status'] == '200':
         # Reset the user's session.
-        del login_session['credentials']
-        del login_session['gplus_id']
+        del login_session['google_credentials']
+        del login_session['user_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']

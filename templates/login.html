@@ -8,27 +8,27 @@
 {% block content %}
 <div class="col-sm-4"></div>
 <div class="col-sm-4">
-  <div class="inner" style="text-align:center">
-    <!-- GOOGLE PLUS SIGN IN-->
-    <div id="signinButtonGoogle">
-      <span class="g-signin"
-        data-scope="openid email"
-        data-clientid={{CLIENT_ID}}
-        data-redirecturi="postmessage"
-        data-accesstype="offline"
-        data-cookiepolicy="single_host_origin"
-        data-callback="signInCallback"
-        data-approvalprompt="force">
-      </span>
-    </div>
-    <div id="signinButtonFacebook">
-      Sign in with Facebook
-    </div>
-    <div id="signinButtonGitHub">
-     Sign in with GitHub
-    </div>
-    <div id="result"></div>
-  </div>
+<div class="inner" style="text-align:center">
+<!-- GOOGLE PLUS SIGN IN-->
+<div id="signinButtonGoogle">
+<span class="g-signin"
+data-scope="openid email"
+data-clientid={{CLIENT_ID}}
+data-redirecturi="postmessage"
+data-accesstype="offline"
+data-cookiepolicy="single_host_origin"
+data-callback="signInCallback"
+data-approvalprompt="force">
+</span>
+</div>
+<!-- FACEBOOK SIGN IN -->
+<div id="signinButtonFacebook">
+<div id="fb-root"></div>
+<div class="fb-login-button" data-max-rows="1" data-size="large" 
+data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
+</div>
+<div id="result"></div>
+</div>
 </div>
 <div class="col-sm-4"></div>
 <script>
@@ -44,11 +44,11 @@ function signInCallback(authResult) {
     // write a 'login successful' message to the web page and then redirect
     $.ajax({
      type: 'POST',
-      url: '/gconnect?state={{state()}}',
-      processData: false,
-      data: authResult['code'],
-      contentType: 'application/octet-stream; charset=utf-8',
-      success: function(result) {
+     url: '/gconnect?state={{state()}}',
+     processData: false,
+     data: authResult['code'],
+     contentType: 'application/octet-stream; charset=utf-8',
+     success: function(result) {
         // Handle or verify the server response if necessary.
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
@@ -64,6 +64,67 @@ function signInCallback(authResult) {
     }); 
   } 
 }
-</script>
 <!--END GOOGLE PLUS SIGN IN -->
-{% endblock %}
+<!-- START FACEBOOK SIGN IN -->
+// Load the SDK asynchronously
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function statusChangeCallback(response) {
+  console.log('statusChangeCallback');
+  console.log(response);
+  if (response.status === 'connected') {
+    console.log(response.authResponse.accessToken);
+    // Logged into the app and Facebook.
+    // Hide the sign-in buttons now that the user is authorized
+    $('#signinButtonGoogle').attr('style', 'display: none');
+    $('#signinButtonFacebook').attr('style', 'display: none');
+    // Send the short-term token to the server, if the server responds, 
+    // write a 'login successful' message to the web page and then redirect
+    $.ajax({
+      type: 'POST',
+      url: '/fbconnect?state={{state()}}',
+      processData: false,
+      data: response.authResponse.accessToken,
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response if necessary.
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          setTimeout(function() {
+            window.location.href = '{{REDIRECT_TO}}';
+          }, 4000);
+        } else if (response['error']) {
+          console.log('There was an error: ' + response['error']);
+        } else {            
+          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+        }
+      }
+    }); 
+  } 
+}
+
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '1610860372517361',
+      cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.4' // use version 2.2
+    });
+  };
+
+  // Called when Login button is clicked.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+  });
+}
+<!-- END FACEBOOK SIGN IN -->
+</script>
+  {% endblock %}
