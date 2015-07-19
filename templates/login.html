@@ -24,7 +24,7 @@ data-approvalprompt="force">
 <!-- FACEBOOK SIGN IN -->
 <div id="signinButtonFacebook">
 <div id="fb-root"></div>
-<div class="fb-login-button" data-max-rows="1" data-size="large" 
+<div class="fb-login-button" data-max-rows="1" data-size="large" scope="email"
 data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"></div>
 </div>
 <div id="result"></div>
@@ -39,7 +39,6 @@ function signInCallback(authResult) {
     // Hide the sign-in buttons now that the user is authorized
     $('#signinButtonGoogle').attr('style', 'display: none');
     $('#signinButtonFacebook').attr('style', 'display: none');
-    $('#signinButtonGitHub').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, 
     // write a 'login successful' message to the web page and then redirect
     $.ajax({
@@ -76,11 +75,11 @@ function signInCallback(authResult) {
 }(document, 'script', 'facebook-jssdk'));
 
 function statusChangeCallback(response) {
+  $('#result').html('Logging in...')
   console.log('statusChangeCallback');
   console.log(response);
-  if (response.status === 'connected') {
+  if (response.authResponse.accessToken) {
     console.log(response.authResponse.accessToken);
-    // Logged into the app and Facebook.
     // Hide the sign-in buttons now that the user is authorized
     $('#signinButtonGoogle').attr('style', 'display: none');
     $('#signinButtonFacebook').attr('style', 'display: none');
@@ -112,10 +111,10 @@ function statusChangeCallback(response) {
 window.fbAsyncInit = function() {
   FB.init({
     appId      : '1610860372517361',
-      cookie     : true,  // enable cookies to allow the server to access 
+    cookie     : true,  // enable cookies to allow the server to access 
                         // the session
-      xfbml      : true,  // parse social plugins on this page
-      version    : 'v2.4' // use version 2.2
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.4' // use version 2.4
     });
   };
 

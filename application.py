@@ -28,6 +28,7 @@ FB_APP_ID = json.loads(
 FB_APP_SECRET = json.loads(
     open('client_secret_fb.json', 'r').read())['client_secret']
 
+# TODO URLs schoen machen
 URL_FB_LTT = "https://graph.facebook.com/oauth/access_token"
 
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
@@ -162,7 +163,6 @@ def login():
     if 'redirect_to' in login_session.keys():
         redirect_to = login_session['redirect_to']
         del login_session['redirect_to']
-    # TODO Facebook Integration
     return render_template('login.html',
                            CLIENT_ID=GOOGLE_CLIENT_ID,
                            REDIRECT_TO=redirect_to)
@@ -415,13 +415,6 @@ def editProduct(product_name):
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     """Login the user by Facebook Sign In."""
-# 1. obtain authorization code and upgrade it to a credentials object
-# 2. check that the access token is valid
-# 3. verify that the access token is used for the intended user
-# 4. verify that the access token is valid for this app
-# 5. store the credentials in the session for later use
-# 6. if user is not known yet, create a new user in the database
-# 7. create and return the output
 
     # Obtain the long-term access token
     params = {'fb_exchange_token': request.data,
@@ -433,6 +426,8 @@ def fbconnect():
     access_token = access_token.strip("access_token=")
     access_token = access_token.split("&")[0]
 
+    print access_token
+
     # Get user info
     userinfo_url = "https://graph.facebook.com/me"
     params = {'access_token': access_token,
@@ -441,12 +436,12 @@ def fbconnect():
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
     name = data['name']
-    user_id = data['id']
+    ext_user_id = data['id']
     email = data['email']
 
     # Get the picture
     # TODO URL JOIN
-    picture_url = "https://graph.facebook.com/v2.4/" + user_id + "/picture"
+    picture_url = "https://graph.facebook.com/v2.4/" + ext_user_id + "/picture"
     print picture_url
     params = {'access_token': access_token,
               'alt': 'json',
@@ -460,7 +455,7 @@ def fbconnect():
                   email=email,
                   picture=picture,
                   fb_access_token=access_token,
-                  user_id=user_id)
+                  ext_user_id=ext_user_id)
 
     return createLoginOutput()
 
@@ -495,8 +490,8 @@ def gconnect():
         return response
 
     # Verify that the access token is used for the intended user.
-    user_id = credentials.id_token['sub']
-    if result['user_id'] != user_id:
+    ext_user_id = credentials.id_token['sub']
+    if result['user_id'] != ext_user_id:
         response = make_response(
             json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -511,8 +506,8 @@ def gconnect():
 
     # Check if the user is already connected.
     stored_credentials = login_session.get('credentials')
-    stored_user_id = login_session.get('user_id')
-    if stored_credentials is not None and user_id == stored_user_id:
+    stored_user_id = login_session.get('ext_user_id')
+    if stored_credentials is not None and ext_user_id == stored_user_id:
         response = make_response(json.dumps(
             'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
@@ -529,7 +524,7 @@ def gconnect():
                   email=data['email'],
                   picture=data['picture'],
                   google_credentials=credentials,
-                  user_id=user_id)
+                  ext_user_id=ext_user_id)
 
     return createLoginOutput()
 
@@ -537,11 +532,11 @@ def gconnect():
 def storeUserData(username,
                   email,
                   picture,
-                  user_id,
+                  ext_user_id,
                   google_credentials=None,
                   fb_access_token=None):
     """Validates and stores the user data
-       given by Google or Facebook"""
+       given by Google or Facebook."""
     login_session['username'] = username
 
     # in case name is not set, use the email
@@ -556,7 +551,7 @@ def storeUserData(username,
     elif fb_access_token:
         login_session['fb_access_token'] = fb_access_token
 
-    login_session['user_id'] = user_id
+    login_session['ext_user_id'] = ext_user_id
 
     # Check if a user exists and if not make a new one
     user_id = getUserID(login_session['email'])
@@ -583,26 +578,34 @@ def createLoginOutput():
 def logout():
     """Logout a user (Google or Facebook)"""
     if login_session.get('google_credentials'):
-        gdisconnect()
+        return gdisconnect()
     else:
-        fbdisconnect()
-    return make_response('Successfully disconnected.', 200)
+        return fbdisconnect()
 
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
-    # TODO FACEBOOK DISCONNECT MISSING
-    del login_session['fb_access_token']
-    del login_session['user_id']
-    del login_session['username']
-    del login_session['email']
-    del login_session['picture']
-    return make_response('Successfully disconnected.', 200)
+    """Revoke a current fb access token and reset the login_session."""
+    # Only disconnect a connected user.
+    if login_session.get('fb_access_token') is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # revoke the access token
+    url = "https://graph.facebook.com/v2.4/"
+    url += str(login_session.get('ext_user_id'))
+    url += "/permissions?access_token="
+    url += str(login_session.get('fb_access_token'))
+    h = httplib2.Http()
+    result = h.request(url, 'DELETE')[0]
+
+    return resetUserSession(result)
 
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    """Revoke a current user's token and reset their login_session."""
+    """Revoke a current google access token and reset the login_session."""
     # Only disconnect a connected user.
     if login_session.get('google_credentials') is None:
         response = make_response(
@@ -624,17 +627,27 @@ def gdisconnect():
                % refresh_token)
         result = h.request(url, 'GET')[0]
 
+    return resetUserSession(result)
+
+
+def resetUserSession(result):
     if result['status'] == '200':
         # Reset the user's session.
-        del login_session['google_credentials']
-        del login_session['user_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
+        if login_session.get('google_credentials'):
+            del login_session['google_credentials']
+        if login_session.get('fb_access_token'):
+            del login_session['fb_access_token']
+        if login_session.get('ext_user_id'):
+            del login_session['ext_user_id']
+        if login_session.get('user_id'):
+            del login_session['user_id']
+        if login_session.get('username'):
+            del login_session['username']
+        if login_session.get('email'):
+            del login_session['email']
+        if login_session.get('picture'):
+            del login_session['picture']
 
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
         flash('Logged out successfully!')
         return redirect(url_for('showGroceryStore'))
     else:
@@ -643,6 +656,32 @@ def gdisconnect():
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+
+@app.route('/disconnectTest')
+def disconnectTest():
+    """TODO REMOVE THIS METHOD"""
+    # Reset the user's session.
+    if login_session.get('google_credentials'):
+        del login_session['google_credentials']
+    if login_session.get('fb_access_token'):
+        del login_session['fb_access_token']
+    if login_session.get('ext_user_id'):
+        del login_session['ext_user_id']
+    if login_session.get('user_id'):
+        del login_session['user_id']
+    if login_session.get('username'):
+        del login_session['username']
+    if login_session.get('email'):
+        del login_session['email']
+    if login_session.get('picture'):
+        del login_session['picture']
+
+    response = make_response(json.dumps('Successfully disconnected.'), 200)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+    flash('Logged out successfully!')
+    return redirect(url_for('showGroceryStore'))
 
 
 def createUser(login_session):

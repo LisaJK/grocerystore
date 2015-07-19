@@ -21,8 +21,9 @@
 	</div>
 	<div class="form-group">
 		<label for="image">Image:</label>
-		<div>{{product.image_file_name}}" or choose a new image:</div>
-		<input type ="file" name="image" class="form-control" id="image">
+		<img id="product_image" src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive"/>
+		<div>Change the product image:</div>
+		<input type ="file" name="image" class="form-control" id="image" onchange="loadFile(event)">
 	</div>
 	<div class="form-group">
 		<button type="submit" id="submit" class="btn btn-default">Save</button>
@@ -37,8 +38,15 @@
    		{% elif category %}
    			$("#category").val("{{category.name}}");
    	    {% else %}
-			$('#category option:first-child').attr("selected", "selected");
+			$("#category option:first-child").attr("selected", "selected");
    	    {% endif %}
-}) 
-    });
+	});	
+
+	var loadFile = function(event) {
+    	var reader = new FileReader();
+    	reader.onload = function() {
+     		$("#product_image").attr("src", reader.result);
+    	};
+    	reader.readAsDataURL(event.target.files[0]);
+  	};
 </script>
