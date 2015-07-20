@@ -22,14 +22,13 @@ app = Flask(__name__)
 GOOGLE_CLIENT_ID = json.loads(
     open('client_secret_g.json', 'r').read())['web']['client_id']
 
+# app id given by Facebook
 FB_APP_ID = json.loads(
     open('client_secret_fb.json', 'r').read())['app_id']
 
+# app secret given by Facebook
 FB_APP_SECRET = json.loads(
     open('client_secret_fb.json', 'r').read())['client_secret']
-
-# TODO URLs schoen machen
-URL_FB_LTT = "https://graph.facebook.com/oauth/access_token"
 
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
 
@@ -157,8 +156,7 @@ def login():
     """Login function which creates and saves an
        anti forgery token, renders the login page and
        starts the login process."""
-    # redirect to the main page after logging in
-    # TODO redirect to different pages
+    # redirect to the correct page after logging in
     redirect_to = url_for('showGroceryStore')
     if 'redirect_to' in login_session.keys():
         redirect_to = login_session['redirect_to']
@@ -187,11 +185,13 @@ def showCategory(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     products = session.query(Product).filter_by(
         category_name=category.name).all()
+    created_by = session.query(User).filter_by(id=category.user_id).one()
     username = getUsername()
     return render_template('showCategory.html',
                            products=products,
                            category=category,
-                           username=username)
+                           username=username,
+                           created_by=created_by.name)
 
 
 @app.route('/grocerystore/<category_name>/<product_name>')
@@ -200,11 +200,13 @@ def showProduct(category_name, product_name):
     product = session.query(Product).filter_by(
         category_name=category_name, name=product_name).one()
     category = session.query(Category).filter_by(name=category_name).one()
+    created_by = session.query(User).filter_by(id=product.user_id).one()
     username = getUsername()
     return render_template('showProduct.html',
                            product=product,
                            category=category,
-                           username=username)
+                           username=username,
+                           created_by=created_by.name)
 
 
 @app.route('/grocerystore/newcategory/', methods=['GET', 'POST'])
@@ -217,7 +219,6 @@ def newCategory():
         newCategory = Category(name=request.form['name'],
                                description=request.form['description'],
                                user_id=login_session['user_id'])
-        # TODO do not create a category that is already existing
         session.add(newCategory)
         session.commit()
         return redirect(url_for('showGroceryStore'))
@@ -254,7 +255,6 @@ def newProduct():
                              category_name=category_name,
                              image_file_name=filename,
                              user_id=login_session['user_id'])
-        # TODO do not create an product that is already existing for the cat
         session.add(newProduct)
         session.commit()
         return redirect(url_for('showCategory', category_name=category_name))
@@ -298,7 +298,7 @@ def deleteCategory(category_name):
                                    category=deletedCategory,
                                    username=username)
         else:
-            flash("You are not allowed to delete the category!")
+            flash('You are not allowed to delete the category!')
             return redirect(url_for('showGroceryStore'))
 
 
@@ -343,9 +343,14 @@ def editCategory(category_name):
         Category).filter_by(name=category_name).one()
     if request.method == 'POST':
         if request.form['name']:
-            # TODO do not create a category that is already existing
             editedCategory.name = request.form['name']
-            return redirect(url_for('showGroceryStore'))
+
+        if request.form['description']:
+            editedCategory.description = request.form['description']
+
+        session.commit()
+
+        return redirect(url_for('showGroceryStore'))
     else:
         if editedCategory.user_id == login_session['user_id']:
             products = (session.query(Product).filter_by(
@@ -356,7 +361,7 @@ def editCategory(category_name):
                                    username=username,
                                    products=products)
         else:
-            flash("You are not allowed to edit the category!")
+            flash('You are not allowed to edit the category!')
             return redirect(url_for('showGroceryStore'))
 
 
@@ -372,7 +377,6 @@ def editProduct(product_name):
         Product).filter_by(name=product_name).one()
     if request.method == 'POST':
         if request.form['name']:
-            # TODO do not create an product that is already existing
             editedProduct.name = request.form['name']
         if request.form['description']:
             editedProduct.description = request.form['description']
@@ -380,12 +384,6 @@ def editProduct(product_name):
             editedProduct.price = request.form['price']
         if request.form['category']:
             editedProduct.category_name = request.form['category']
-        # delete old image if existing ...
-        if editedProduct.image_file_name:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   editedProduct.image_file_name))
-            editedProduct.image_file_name = None
-        # ... and save the new one
         if request.files['image']:
             filename = None
             file = request.files['image']
@@ -396,6 +394,11 @@ def editProduct(product_name):
                 # save the image file
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 editedProduct.image_file_name = filename
+        else:
+            editedProduct.image_file_name = None
+
+        # update the product
+        session.commit()
 
         return redirect(url_for('showCategory',
                                 category_name=editedProduct.category_name))
@@ -408,7 +411,7 @@ def editProduct(product_name):
                                    categories=categories,
                                    username=username)
         else:
-            flash("You are not allowed to edit the product!")
+            flash('You are not allowed to edit the product!')
             return redirect(url_for('showGroceryStore'))
 
 
@@ -421,15 +424,14 @@ def fbconnect():
               'client_id': FB_APP_ID,
               'client_secret': FB_APP_SECRET,
               'grant_type': 'fb_exchange_token'}
-    answer = requests.get(URL_FB_LTT, params=params)
+    answer = requests.get('https://graph.facebook.com/oauth/access_token',
+                          params=params)
     access_token = answer.content
-    access_token = access_token.strip("access_token=")
-    access_token = access_token.split("&")[0]
-
-    print access_token
+    access_token = access_token.strip('access_token=')
+    access_token = access_token.split('&')[0]
 
     # Get user info
-    userinfo_url = "https://graph.facebook.com/me"
+    userinfo_url = 'https://graph.facebook.com/me'
     params = {'access_token': access_token,
               'fields': 'name,email',
               'alt': 'json'}
@@ -440,9 +442,7 @@ def fbconnect():
     email = data['email']
 
     # Get the picture
-    # TODO URL JOIN
-    picture_url = "https://graph.facebook.com/v2.4/" + ext_user_id + "/picture"
-    print picture_url
+    picture_url = 'https://graph.facebook.com/v2.4/' + ext_user_id + '/picture'
     params = {'access_token': access_token,
               'alt': 'json',
               'redirect': 'false',
@@ -514,7 +514,7 @@ def gconnect():
         return response
 
     # Get user info
-    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    userinfo_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
 
@@ -593,9 +593,9 @@ def fbdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     # revoke the access token
-    url = "https://graph.facebook.com/v2.4/"
+    url = 'https://graph.facebook.com/v2.4/'
     url += str(login_session.get('ext_user_id'))
-    url += "/permissions?access_token="
+    url += '/permissions?access_token='
     url += str(login_session.get('fb_access_token'))
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[0]
@@ -660,7 +660,7 @@ def resetUserSession(result):
 
 @app.route('/disconnectTest')
 def disconnectTest():
-    """TODO REMOVE THIS METHOD"""
+    """TODO REMOVE THIS TEST METHOD"""
     # Reset the user's session.
     if login_session.get('google_credentials'):
         del login_session['google_credentials']
@@ -740,7 +740,7 @@ def csrf_protect():
     """If a POST does not contain a csrf token
        or contains a wrong csrf token
        a Forbidden is raised."""
-    if request.method == "POST":
+    if request.method == 'POST':
         token = login_session.pop('state', None)
         if not token or(token != request.form.get('state')
                         and token != request.args.get('state')):

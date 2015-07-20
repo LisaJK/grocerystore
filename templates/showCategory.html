@@ -6,7 +6,10 @@
 		<h2>{{category.name}}</h2>
 		<h4>Description: {{category.description}}</h4>
 		{% include "products.html" %}
-		created by: {{category.user_id}}
+		created by: {{created_by}}
+			<div class="editDelete"><a href = "{{url_for('editCategory', category_name=category.name)}}"> Edit | </a>
+	<a href = "{{url_for('deleteCategory', category_name=category.name)}}">Delete</a>
+	</div>
 	</div>
 </div>
 <div class="col-sm-3"></div>

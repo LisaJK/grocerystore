@@ -21,32 +21,46 @@
 	</div>
 	<div class="form-group">
 		<label for="image">Image:</label>
+		{% if product.image_file_name %}
 		<img id="product_image" src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive"/>
-		<div>Change the product image:</div>
-		<input type ="file" name="image" class="form-control" id="image" onchange="loadFile(event)">
+		{% else %}
+		<img id="product_image" src="" class="img-responsive" alt="no product image"/>
+		{% endif %}
 	</div>
-	<div class="form-group">
-		<button type="submit" id="submit" class="btn btn-default">Save</button>
-		<a href="{{url_for('showGroceryStore')}}"><input type="button" value="Cancel" class="btn btn-default"></a>
-		<input type="hidden" name="state" value="{{state()}}">
+		<div class="form-group">
+			<label for="no_image">Delete the image: </label>
+			<button type="button" id="no_image" class="btn btn-default form-control" onclick=deleteImage()>Delete</button>
+			</div>
+					<div class="form-group">
+			<label for="file">Change the image: </label>
+			<input type ="file" name="image" id="image" onchange="loadFile(event)" class="form-control"/>
+		</div>
+		   <button type="submit" id="submit" class="btn btn-default">Save</button>
+		   <a href="{{url_for('showGroceryStore')}}"><input type="button" value="Cancel" class="btn btn-default"></a>
+		   <input type="hidden" name="state" value="{{state()}}">
 	</div>
 </form>	
 <script type="text/javascript">
-   $(document).ready(function() {
-   		{% if product %}
-   		    $("#category").val("{{product.category_name}}");
-   		{% elif category %}
-   			$("#category").val("{{category.name}}");
-   	    {% else %}
-			$("#category option:first-child").attr("selected", "selected");
-   	    {% endif %}
+	$(document).ready(function() {
+		{% if product %}
+		$("#category").val("{{product.category_name}}");
+		{% elif category %}
+		$("#category").val("{{category.name}}");
+		{% else %}
+		$("#category option:first-child").attr("selected", "selected");
+		{% endif %}
 	});	
 
 	var loadFile = function(event) {
-    	var reader = new FileReader();
-    	reader.onload = function() {
-     		$("#product_image").attr("src", reader.result);
-    	};
-    	reader.readAsDataURL(event.target.files[0]);
-  	};
+		var reader = new FileReader();
+		reader.onload = function() {
+		$("#product_image").attr("src", reader.result);
+		};
+		reader.readAsDataURL(event.target.files[0]);
+	};
+
+	function deleteImage() {
+		$("#product_image").attr("src", "");
+		$("#image").val("");
+	};
 </script>

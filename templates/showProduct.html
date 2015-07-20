@@ -1,26 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
-	<div class=col-sm-3>
-	</div>
-	<div class="col-sm-6">
-		<div class="inner">
-			<h2>{{product.name}}</h2>
-			<a href="{{url_for('showCategory', category_name=category.name)}}"><h4>Category: {{category.name}}</h4></a>
-			<div>
-				{{product.description}}
-			</div>
-			<div>
-			Price: {{product.price}}
-			</div>
-			<div class="editDelete"><a href="{{url_for('editProduct', product_name=product.name)}}"> Edit | </a><a href="{{url_for('deleteProduct', category_name=product.category_name, product_name=product.name)}}">Delete</a></div>
-			<div>
-				<img src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive"/>
-			</div>
-			<div>
-			created by: {{product.user_id}}
-			</div>
+<div class=col-sm-3>
+</div>
+<div class="col-sm-6">
+	<div class="inner">
+		<h2>{{product.name}}</h2>
+		<a href="{{url_for('showCategory', category_name=category.name)}}"><h4>Category: {{category.name}}</h4></a>
+		<div>
+			{{product.description}}
 		</div>
+		<div>
+			<label>Price:</label>
+			{{product.price}}
+		</div>
+		<div>
+			<label>Image:</label>
+			{% if product.image_file_name %}
+			  <img src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive"/>
+			{% else %}
+			-- no product image --
+			{% endif %}
+		</div>
+		<div>
+			<label>Created by:</label>
+			{{created_by}}
+		</div>
+		<div class="editDelete"><a href="{{url_for('editProduct', product_name=product.name)}}"> Edit | </a><a href="{{url_for('deleteProduct', category_name=product.category_name, product_name=product.name)}}">Delete</a></div>
 	</div>
-	<div class=col-sm-3>
-	</div>
+</div>
+<div class=col-sm-3>
+</div>
 {% endblock %}
