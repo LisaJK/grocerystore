@@ -1,19 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import session as login_session
 from flask import make_response, flash, jsonify, send_from_directory
+from werkzeug import secure_filename
+from werkzeug.contrib.atom import AtomFeed
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Product, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from urlparse import urljoin
+import xml.etree.ElementTree as ET
 import httplib2
 import json
 import requests
 import random
 import string
-import xml.etree.ElementTree as ET
-from werkzeug import secure_filename
 import os
+import datetime
+from database_setup import Base, Category, Product, User
 
 
 app = Flask(__name__)
@@ -107,9 +110,9 @@ def productsXML():
 @app.route('/grocerystore/<category_name>/products/XML')
 def categoryXML(category_name):
     """XML API to get info about a given category."""
-    session.query(Category).filter_by(name=category_name).one()
+    category = session.query(Category).filter_by(name=category_name).one()
     allProducts = session.query(Product).filter_by(
-        category_name=category_name).all()
+        category_name=category.name).all()
     products = ET.Element('products')
     for product in allProducts:
         prod = buildProductXML(product)
@@ -149,6 +152,93 @@ def createXMLResponse(tree):
     response = make_response(output, 200)
     response.headers['Content-Type'] = 'application/xml'
     return response
+
+
+@app.route('/grocerystore/categories/Atom')
+def categoriesAtom():
+    """Atom API to get info about all categories."""
+    feed = AtomFeed('Categories',
+                    feed_url=request.url,
+                    url=url_for('showGroceryStore'))
+    categories = session.query(Category).order_by(asc(Category.name))
+    for category in categories:
+        created_by = session.query(User).filter_by(id=category.user_id).one()
+        feed.add(category.name,
+                 unicode(category.description),
+                 content_type='text',
+                 author=created_by.name,
+                 id=category.name,
+                 url=urljoin(request.url, url_for('showCategory',
+                             category_name=category.name)),
+                 updated=datetime.datetime.now())
+    return feed.get_response()
+
+
+@app.route('/grocerystore/products/Atom')
+def productsAtom():
+    """Atom API to get info about all products."""
+    feed = AtomFeed('Products',
+                    feed_url=request.url,
+                    url=url_for('showGroceryStore'))
+    products = session.query(Product).order_by(asc(Product.category_name))
+    for product in products:
+        created_by = session.query(User).filter_by(id=product.user_id).one()
+
+        feed.add(product.name,
+                 unicode(product.description),
+                 content_type='text',
+                 author=created_by.name,
+                 id=product.name,
+                 url=urljoin(request.url, url_for('showProduct',
+                             category_name=product.category_name,
+                             product_name=product.name)),
+                 updated=datetime.datetime.now())
+    return feed.get_response()
+
+
+@app.route('/grocerystore/<category_name>/products/Atom')
+def categoryAtom(category_name):
+    """Atom API to get info about a given category."""
+    category = session.query(Category).filter_by(name=category_name).one()
+    feed = AtomFeed('Category',
+                    feed_url=request.url,
+                    url=url_for('showCategory', category.name))
+    products = session.query(Product).filter_by(
+        category_name=category.name).all()
+    for product in products:
+        created_by = session.query(User).filter_by(id=product.user_id).one()
+        feed.add(product.name,
+                 unicode(product.description),
+                 content_type='text',
+                 author=created_by.name,
+                 id=product.name,
+                 url=urljoin(request.url, url_for('showProduct',
+                             category_name=product.category_name,
+                             product_name=product.name)),
+                 updated=datetime.datetime.now())
+    return feed.get_response()
+
+
+@app.route('/grocerystore/<category_name>/<product_name>/Atom')
+def productAtom(category_name, product_name):
+    """Atom API to get info about a given product and category."""
+    product = session.query(Product).filter_by(name=product_name).one()
+    feed = AtomFeed('Product',
+                    feed_url=request.url,
+                    url=url_for('showProduct',
+                                category_name=product.category_name,
+                                product_name=product.name))
+    created_by = session.query(User).filter_by(id=product.user_id).one()
+    feed.add(product.name,
+             unicode(product.description),
+             content_type='text',
+             author=created_by.name,
+             id=product.name,
+             url=urljoin(request.url, url_for('showProduct',
+                         category_name=product.category_name,
+                         product_name=product.name)),
+             updated=datetime.datetime.now())
+    return feed.get_response()
 
 
 @app.route('/login/')

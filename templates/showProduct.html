@@ -11,12 +11,16 @@
 		</div>
 		<div>
 			<label>Price:</label>
-			{{product.price}}
+			{% if product.price %}
+				{{product.price}}
+			{% else %}
+				-- no product price defined --
+			{% endif %}
 		</div>
 		<div>
 			<label>Image:</label>
 			{% if product.image_file_name %}
-			  <img src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive"/>
+			  <img src="{{url_for('uploads', filename=product.image_file_name)}}" class="img-responsive" id="show_product_image"/>
 			{% else %}
 			-- no product image --
 			{% endif %}

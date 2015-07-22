@@ -12,16 +12,17 @@ authentication via Google or Facebook. Authenticated users have the ability to
 post, edit, or delete their own products.
 
 Additional Functionality:
-- API Endpoints: the app has an implementation of XML endpoints.
-- CRUD: Read:   A product image field is added which can be read from the 
-                database and displayed on the page.
-- CRUD: Create: A product image field can be included when a new product is 
-                created in the database.
-- CRUD: Update: For already existing products product images can be added, 
-                changed and deleted.
-- CRUD: Delete: The function is implemented using POST requests and nonces to
-                prevent cross-site request forgeries (CSRF)
-- Comments:     Comments are (hopefully ;-)) thorough and concise. XXX Pycco? XXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+- API Endpoints: Apart from the required JSON endpoints, the app has also an 
+                 implementation of XML and Atom endpoints.
+- CRUD: Read:    A product image field is added which can be read from the 
+                 database and displayed on the page.
+- CRUD: Create:  A product image field can be included when a new product is 
+                 created in the database.
+- CRUD: Update:  For already existing products product images can be added, 
+                 changed and deleted.
+- CRUD: Delete:  The function is implemented using POST requests and nonces to
+                 prevent cross-site request forgeries (CSRF).
+- Comments:      Comments are (hopefully ;-)) thorough and concise. XXX Pycco? XXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
 ------------------------------------------------------------------------------
 
 
