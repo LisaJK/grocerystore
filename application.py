@@ -1,3 +1,10 @@
+"""This module contains all functions of Lisa's Grocery Store.
+
+   Lisa's Grocery Store is a web application that provides a list of products
+   within a variety of product categories. It integrates user registration and
+   authentication via Google or Facebook. Authenticated users have the ability
+   to post, edit, or delete their own products.
+"""
 from flask import Flask, render_template, request, redirect, url_for
 from flask import session as login_session
 from flask import make_response, flash, jsonify, send_from_directory
@@ -21,23 +28,32 @@ from database_setup import Base, Category, Product, User
 
 app = Flask(__name__)
 
-# client id given by Google
 GOOGLE_CLIENT_ID = json.loads(
-    open('client_secret_g.json', 'r').read())['web']['client_id']
+    open(os.path.join(os.path.dirname(__file__),
+         'client_secret_g.json')).read())['web']['client_id']
+""" str: client id assigned by Google and saved in 'client_secret_g.json'."""
 
-# app id given by Facebook
 FB_APP_ID = json.loads(
-    open('client_secret_fb.json', 'r').read())['app_id']
+    open(os.path.join(os.path.dirname(__file__),
+         'client_secret_fb.json')).read())['app_id']
+""" str: app id assigned by Facebook and saved in 'client_secret_fb.json'."""
 
-# app secret given by Facebook
 FB_APP_SECRET = json.loads(
-    open('client_secret_fb.json', 'r').read())['client_secret']
+    open(os.path.join(os.path.dirname(__file__),
+         'client_secret_fb.json')).read())['client_secret']
+""" str: app secret assigned by Facebook and
+         saved in 'client_secret_fb.json'.
+"""
 
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
 
-# Used for the product image uploads
+
 UPLOAD_FOLDER = './uploads'
+""" str: name of the folder where uploaded images can be found."""
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
+""" uploaded images can have the extension included in this set."""
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -243,10 +259,8 @@ def productAtom(category_name, product_name):
 
 @app.route('/login/')
 def login():
-    """Login function which creates and saves an
-       anti forgery token, renders the login page and
+    """Login function which renders the login page and
        starts the login process."""
-    # redirect to the correct page after logging in
     redirect_to = url_for('showGroceryStore')
     if 'redirect_to' in login_session.keys():
         redirect_to = login_session['redirect_to']
@@ -259,7 +273,8 @@ def login():
 @app.route('/')
 @app.route('/grocerystore/')
 def showGroceryStore():
-    """Show the grocerystore with all categories."""
+    """Show the grocerystore with all categories
+       and all products existing in the database."""
     categories = session.query(Category).order_by(asc(Category.name))
     products = session.query(Product).order_by(asc(Product.category_name))
     username = getUsername()
@@ -271,7 +286,7 @@ def showGroceryStore():
 
 @app.route('/grocerystore/<category_name>/products/')
 def showCategory(category_name):
-    """Show the products of a given category."""
+    """Show the category and the products of the category."""
     category = session.query(Category).filter_by(name=category_name).one()
     products = session.query(Product).filter_by(
         category_name=category.name).all()
@@ -301,7 +316,15 @@ def showProduct(category_name, product_name):
 
 @app.route('/grocerystore/newcategory/', methods=['GET', 'POST'])
 def newCategory():
-    """Create a new category."""
+    """Create a new category.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, a new category is created
+       in the database with the returned values.
+       If the request method is GET, the new category page is
+       rendered.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('newCategory')
         return redirect(url_for('login'))
@@ -321,7 +344,16 @@ def newCategory():
 
 @app.route('/grocerystore/newproduct/', methods=['GET', 'POST'])
 def newProduct():
-    """Create a new product."""
+    """Create a new product.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, a new category is created
+       in the database with the returned values. The image is
+       stored in the upload folder.
+       If the request method is GET, the new product page is
+       rendered.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('newProduct')
         return redirect(url_for('login'))
@@ -359,7 +391,17 @@ def newProduct():
 
 @app.route('/grocerystore/<category_name>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_name):
-    """Delete the given category and its connected products."""
+    """Delete the given category and its connected products.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, the category and all
+       products of the category are deleted. The images of
+       the deleted products are also deleted in the upload
+       folder.
+       If the request method is GET, the delete category page is
+       rendered if the user is the owner of the category.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('deleteCategory',
                                                category_name=category_name)
@@ -395,7 +437,16 @@ def deleteCategory(category_name):
 @app.route('/grocerystore/<category_name>/<product_name>/delete/',
            methods=['GET', 'POST'])
 def deleteProduct(category_name, product_name):
-    """Delete a given product of a category."""
+    """Delete a given product of a category.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, the product is deleted.
+       The image of the deleted product is also deleted in the
+       upload folder.
+       If the request method is GET, the delete product page is
+       rendered if the user is the owner of the product.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('deleteProduct')
         return redirect(url_for('login'))
@@ -424,7 +475,15 @@ def deleteProduct(category_name, product_name):
 
 @app.route('/grocerystore/<category_name>/edit/', methods=['GET', 'POST'])
 def editCategory(category_name):
-    """Edit a given category."""
+    """Edit a given category.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, the category is updated
+       with the returned values.
+       If the request method is GET, the edit category page is
+       rendered if the user is the owner of the category.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('editCategory',
                                                category_name=category_name)
@@ -458,7 +517,16 @@ def editCategory(category_name):
 @app.route('/grocerystore/editproduct/<product_name>/',
            methods=['GET', 'POST'])
 def editProduct(product_name):
-    """Edit a given product."""
+    """Edit a given product.
+
+       If not logged in yet, the user is redirected to
+       the login page.
+       If the request method is POST, the product is updated with
+       the returned values. The image of the product is also updated
+       in the upload folder.
+       If the request method is GET, the edit product page is
+       rendered if the user is the owner of the product.
+    """
     if 'username' not in login_session.keys():
         login_session['redirect_to'] = url_for('editProduct',
                                                product_name=product_name)
@@ -507,8 +575,12 @@ def editProduct(product_name):
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
-    """Login the user by Facebook Sign In."""
+    """Login the user by Facebook Sign In.
 
+       First, the short term token returned by the POST is echanged into
+       a long term access token. Then get the user info and the picture
+       and store the user data in the login session for later use.
+    """
     # Obtain the long-term access token
     params = {'fb_exchange_token': request.data,
               'client_id': FB_APP_ID,
@@ -552,7 +624,15 @@ def fbconnect():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    """Login the user by Google Sign In."""
+    """Login the user by Google Sign In.
+
+       First, obtain the authorization code from the POST, update
+       the authorization code into a credentials object and check
+       if the access token within the credentials object is valid.
+       After having checked that the access token is used for the 
+       intended user and app, get the user info and store the user
+       data for later use in the login session.
+    """
     # Obtain authorization code
     code = request.data
     try:
@@ -625,8 +705,10 @@ def storeUserData(username,
                   ext_user_id,
                   google_credentials=None,
                   fb_access_token=None):
-    """Validates and stores the user data
-       given by Google or Facebook."""
+    """Stores the user data
+       given by Google or Facebook
+       in the login session.
+    """
     login_session['username'] = username
 
     # in case name is not set, use the email
@@ -651,7 +733,9 @@ def storeUserData(username,
 
 
 def createLoginOutput():
-    """Creates the login output."""
+    """Creates the login output for the login page
+       after a successful login via Google or Facebook.
+    """
     output = ''
     output += '<h2>Welcome!</h2>'
     output += '<h3>' + login_session['username'] + '</h3>'
@@ -666,7 +750,7 @@ def createLoginOutput():
 
 @app.route('/logout')
 def logout():
-    """Logout a user (Google or Facebook)"""
+    """Logout a user (Google or Facebook)."""
     if login_session.get('google_credentials'):
         return gdisconnect()
     else:
@@ -721,6 +805,7 @@ def gdisconnect():
 
 
 def resetUserSession(result):
+    """ resets the user data of the login session."""
     if result['status'] == '200':
         # Reset the user's session.
         if login_session.get('google_credentials'):
@@ -746,32 +831,6 @@ def resetUserSession(result):
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
-
-
-@app.route('/disconnectTest')
-def disconnectTest():
-    """TODO REMOVE THIS TEST METHOD"""
-    # Reset the user's session.
-    if login_session.get('google_credentials'):
-        del login_session['google_credentials']
-    if login_session.get('fb_access_token'):
-        del login_session['fb_access_token']
-    if login_session.get('ext_user_id'):
-        del login_session['ext_user_id']
-    if login_session.get('user_id'):
-        del login_session['user_id']
-    if login_session.get('username'):
-        del login_session['username']
-    if login_session.get('email'):
-        del login_session['email']
-    if login_session.get('picture'):
-        del login_session['picture']
-
-    response = make_response(json.dumps('Successfully disconnected.'), 200)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-    flash('Logged out successfully!')
-    return redirect(url_for('showGroceryStore'))
 
 
 def createUser(login_session):
@@ -804,7 +863,7 @@ def getUserID(email):
 
 def getUsername():
     """Returns the username if already in the
-       login_session, otherwise None."""
+       login session, otherwise None."""
     username = None
     if 'username' in login_session.keys():
         username = login_session['username']

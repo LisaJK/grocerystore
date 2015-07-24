@@ -1,4 +1,4 @@
-# Database setup for Catalog App
+"""Database setup for Lisa's Grocery Store."""
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -8,7 +8,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    """Class representing a user"""
+    """Class representing a user."""
 
     __tablename__ = 'user'
 
@@ -19,7 +19,7 @@ class User(Base):
 
     @property
     def serialize(self):
-        """Return object data in easily serializeable format"""
+        """Return object data in easily serializeable format."""
         return {
             'id': self.id,
             'name': self.name,
@@ -29,7 +29,7 @@ class User(Base):
 
 
 class Category(Base):
-    """Class representing a Category"""
+    """Class representing a Category."""
 
     __tablename__ = 'category'
 
@@ -40,7 +40,7 @@ class Category(Base):
 
     @property
     def serialize(self):
-        """Return object data in easily serializeable format"""
+        """Return object data in easily serializeable format."""
         return {
             'name': self.name,
             'description': self.description,
@@ -49,7 +49,7 @@ class Category(Base):
 
 
 class Product(Base):
-    """Class representing an product"""
+    """Class representing an product."""
 
     __tablename__ = 'product'
 
@@ -65,7 +65,7 @@ class Product(Base):
 
     @property
     def serialize(self):
-        """Return object data in easily serializeable format"""
+        """Return object data in easily serializeable format."""
         return {
             'name': self.name,
             'description': self.description,
