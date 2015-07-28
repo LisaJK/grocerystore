@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>database_setup.py &mdash; Lisa&#39;s Grocery Store 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lisa&#39;s Grocery Store 1.0 documentation" href="index.html" />
+    <link rel="up" title="Python Modules" href="modules.html" />
+    <link rel="next" title="load_grocery_store.py" href="load_grocery_store.html" />
+    <link rel="prev" title="application.py" href="application.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="load_grocery_store.html" title="load_grocery_store.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="application.py"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-database_setup">
+<span id="database-setup-py"></span><h1>database_setup.py<a class="headerlink" href="#module-database_setup" title="Permalink to this headline">¶</a></h1>
+<p>Database setup for Lisa&#8217;s Grocery Store.
+The database consists of three tables representing
+three objects:</p>
+<ul class="simple">
+<li>User:
+A user is created after login and can
+create, update or delete categories and products.</li>
+<li>Category:
+A category can be created, updated and deleted.
+It is always owned by one user.</li>
+<li>Product:
+A product can be created, updated and deleted.
+It is always owned by one user and assigned
+to one category.</li>
+</ul>
+<dl class="class">
+<dt id="database_setup.Category">
+<em class="property">class </em><code class="descclassname">database_setup.</code><code class="descname">Category</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#database_setup.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Class representing a Category.</p>
+<dl class="attribute">
+<dt id="database_setup.Category.description">
+<code class="descname">description</code><a class="headerlink" href="#database_setup.Category.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>description (Column): a description of the category.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Category.name">
+<code class="descname">name</code><a class="headerlink" href="#database_setup.Category.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name (Column): the category name (primary key).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Category.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#database_setup.Category.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return object data in easily serializeable format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Category.user">
+<code class="descname">user</code><a class="headerlink" href="#database_setup.Category.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>relation to the user who is the owner.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Category.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#database_setup.Category.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>user_id (Column): reference to the owner of the category.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="database_setup.Product">
+<em class="property">class </em><code class="descclassname">database_setup.</code><code class="descname">Product</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#database_setup.Product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Class representing an product.</p>
+<dl class="attribute">
+<dt id="database_setup.Product.category">
+<code class="descname">category</code><a class="headerlink" href="#database_setup.Product.category" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.category_name">
+<code class="descname">category_name</code><a class="headerlink" href="#database_setup.Product.category_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>category_name (Column): the category the product belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.description">
+<code class="descname">description</code><a class="headerlink" href="#database_setup.Product.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>description (Column): a description of the product.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.image_file_name">
+<code class="descname">image_file_name</code><a class="headerlink" href="#database_setup.Product.image_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>image_file_name (str): file name of an image of the product.
+The image is stored in the upload folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.name">
+<code class="descname">name</code><a class="headerlink" href="#database_setup.Product.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name (Column): the product name, primary key.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.price">
+<code class="descname">price</code><a class="headerlink" href="#database_setup.Product.price" title="Permalink to this definition">¶</a></dt>
+<dd><p>price (Column): the price of the product.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#database_setup.Product.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return object data in easily serializeable format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.user">
+<code class="descname">user</code><a class="headerlink" href="#database_setup.Product.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>relation to the user who is the owner.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.Product.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#database_setup.Product.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>user_id (Column): the id of the owner of the product.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="database_setup.User">
+<em class="property">class </em><code class="descclassname">database_setup.</code><code class="descname">User</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#database_setup.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Class representing a user.</p>
+<dl class="attribute">
+<dt id="database_setup.User.email">
+<code class="descname">email</code><a class="headerlink" href="#database_setup.User.email" title="Permalink to this definition">¶</a></dt>
+<dd><p>email (Column): the email of the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.User.id">
+<code class="descname">id</code><a class="headerlink" href="#database_setup.User.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>id (Column): the internal user id used as primary key.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.User.name">
+<code class="descname">name</code><a class="headerlink" href="#database_setup.User.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name (Column): the user name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.User.picture">
+<code class="descname">picture</code><a class="headerlink" href="#database_setup.User.picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>picture (Column): link to a picture of the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="database_setup.User.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#database_setup.User.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return object data in easily serializeable format.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="application.html"
+                        title="previous chapter">application.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="load_grocery_store.html"
+                        title="next chapter">load_grocery_store.py</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/database_setup.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="load_grocery_store.html" title="load_grocery_store.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="application.py"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Lisa Kugler.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

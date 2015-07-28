@@ -1,0 +1,460 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>application.py &mdash; Lisa&#39;s Grocery Store 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lisa&#39;s Grocery Store 1.0 documentation" href="index.html" />
+    <link rel="up" title="Python Modules" href="modules.html" />
+    <link rel="next" title="database_setup.py" href="database_setup.html" />
+    <link rel="prev" title="Python Modules" href="modules.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database_setup.html" title="database_setup.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Python Modules"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-application">
+<span id="application-py"></span><h1>application.py<a class="headerlink" href="#module-application" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the server functionality of Lisa&#8217;s Grocery Store.</p>
+<dl class="data">
+<dt id="application.ALLOWED_EXTENSIONS">
+<code class="descclassname">application.</code><code class="descname">ALLOWED_EXTENSIONS</code><em class="property"> = set(['gif', 'jpeg', 'JPG', 'jpg', 'png'])</em><a class="headerlink" href="#application.ALLOWED_EXTENSIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>uploaded images can have the extension included in this set.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="application.FB_APP_ID">
+<code class="descclassname">application.</code><code class="descname">FB_APP_ID</code><em class="property"> = u'1610860372517361'</em><a class="headerlink" href="#application.FB_APP_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: app id assigned by Facebook and saved in &#8216;client_secret_fb.json&#8217;.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="application.FB_APP_SECRET">
+<code class="descclassname">application.</code><code class="descname">FB_APP_SECRET</code><em class="property"> = u'a3585e18fc02dc3f9496c6c7837dcf4f'</em><a class="headerlink" href="#application.FB_APP_SECRET" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: app secret assigned by Facebook and
+saved in &#8216;client_secret_fb.json&#8217;.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="application.GOOGLE_CLIENT_ID">
+<code class="descclassname">application.</code><code class="descname">GOOGLE_CLIENT_ID</code><em class="property"> = u'130832505461-33h5klvebue7cqnh8ojer6drf67e7js3.apps.googleusercontent.com'</em><a class="headerlink" href="#application.GOOGLE_CLIENT_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: client id assigned by Google and saved in &#8216;client_secret_g.json&#8217;.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="application.UPLOAD_FOLDER">
+<code class="descclassname">application.</code><code class="descname">UPLOAD_FOLDER</code><em class="property"> = './uploads'</em><a class="headerlink" href="#application.UPLOAD_FOLDER" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: name of the folder where uploaded images can be found.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.allowed_file">
+<code class="descclassname">application.</code><code class="descname">allowed_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#application.allowed_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the filename has an allowed extension.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.buildProductXML">
+<code class="descclassname">application.</code><code class="descname">buildProductXML</code><span class="sig-paren">(</span><em>product</em><span class="sig-paren">)</span><a class="headerlink" href="#application.buildProductXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds up the XML tree for a product.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoriesAtom">
+<code class="descclassname">application.</code><code class="descname">categoriesAtom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.categoriesAtom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atom API to get info about all categories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoriesJSON">
+<code class="descclassname">application.</code><code class="descname">categoriesJSON</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.categoriesJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON API to get info about all categories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoriesXML">
+<code class="descclassname">application.</code><code class="descname">categoriesXML</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.categoriesXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML API to get info about all categories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoryAtom">
+<code class="descclassname">application.</code><code class="descname">categoryAtom</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.categoryAtom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atom API to get info about a given category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoryJSON">
+<code class="descclassname">application.</code><code class="descname">categoryJSON</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.categoryJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON API to get info about a given category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.categoryXML">
+<code class="descclassname">application.</code><code class="descname">categoryXML</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.categoryXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML API to get info about a given category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.createLoginOutput">
+<code class="descclassname">application.</code><code class="descname">createLoginOutput</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.createLoginOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the login output for the login page
+after a successful login via Google or Facebook.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.createUser">
+<code class="descclassname">application.</code><code class="descname">createUser</code><span class="sig-paren">(</span><em>login_session</em><span class="sig-paren">)</span><a class="headerlink" href="#application.createUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new user in the database.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.createXMLResponse">
+<code class="descclassname">application.</code><code class="descname">createXMLResponse</code><span class="sig-paren">(</span><em>tree</em><span class="sig-paren">)</span><a class="headerlink" href="#application.createXMLResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the xml response out of the given tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.csrf_protect">
+<code class="descclassname">application.</code><code class="descname">csrf_protect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.csrf_protect" title="Permalink to this definition">¶</a></dt>
+<dd><p>If a POST does not contain a csrf token
+or contains a wrong csrf token
+a Forbidden is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.deleteCategory">
+<code class="descclassname">application.</code><code class="descname">deleteCategory</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.deleteCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the given category and its connected products.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, the category and all
+products of the category are deleted. The images of
+the deleted products are also deleted in the upload
+folder.
+If the request method is GET, the delete category page is
+rendered if the user is the owner of the category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.deleteProduct">
+<code class="descclassname">application.</code><code class="descname">deleteProduct</code><span class="sig-paren">(</span><em>category_name</em>, <em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.deleteProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a given product of a category.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, the product is deleted.
+The image of the deleted product is also deleted in the
+upload folder.
+If the request method is GET, the delete product page is
+rendered if the user is the owner of the product.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.editCategory">
+<code class="descclassname">application.</code><code class="descname">editCategory</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.editCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit a given category.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, the category is updated
+with the returned values.
+If the request method is GET, the edit category page is
+rendered if the user is the owner of the category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.editProduct">
+<code class="descclassname">application.</code><code class="descname">editProduct</code><span class="sig-paren">(</span><em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.editProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit a given product.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, the product is updated with
+the returned values. The image of the product is also updated
+in the upload folder.
+If the request method is GET, the edit product page is
+rendered if the user is the owner of the product.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.fbconnect">
+<code class="descclassname">application.</code><code class="descname">fbconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.fbconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Login the user by Facebook Sign In.</p>
+<p>First, the short term token returned by the POST is echanged into
+a long term access token. Then get the user info and the picture
+and store the user data in the login session for later use.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.fbdisconnect">
+<code class="descclassname">application.</code><code class="descname">fbdisconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.fbdisconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revoke a current fb access token and reset the login_session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.gconnect">
+<code class="descclassname">application.</code><code class="descname">gconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.gconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Login the user by Google Sign In.</p>
+<p>First, obtain the authorization code from the POST, update
+the authorization code into a credentials object and check
+if the access token within the credentials object is valid.
+After having checked that the access token is used for the 
+intended user and app, get the user info and store the user
+data for later use in the login session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.gdisconnect">
+<code class="descclassname">application.</code><code class="descname">gdisconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.gdisconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revoke a current google access token and reset the login_session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.generate_csrf_token">
+<code class="descclassname">application.</code><code class="descname">generate_csrf_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.generate_csrf_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a csrf token.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.getUserID">
+<code class="descclassname">application.</code><code class="descname">getUserID</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="headerlink" href="#application.getUserID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the user id connected to the given email
+or None if the email is not existing in the
+database yet.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.getUserInfo">
+<code class="descclassname">application.</code><code class="descname">getUserInfo</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="headerlink" href="#application.getUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a user of the given user_id.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.getUsername">
+<code class="descclassname">application.</code><code class="descname">getUsername</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.getUsername" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the username if already in the
+login session, otherwise None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.get_random_string">
+<code class="descclassname">application.</code><code class="descname">get_random_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.get_random_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an uppercase random string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.login">
+<code class="descclassname">application.</code><code class="descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Login function which renders the login page and
+starts the login process.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.logout">
+<code class="descclassname">application.</code><code class="descname">logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logout a user (Google or Facebook).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.newCategory">
+<code class="descclassname">application.</code><code class="descname">newCategory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.newCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new category.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, a new category is created
+in the database with the returned values.
+If the request method is GET, the new category page is
+rendered.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.newProduct">
+<code class="descclassname">application.</code><code class="descname">newProduct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.newProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new product.</p>
+<p>If not logged in yet, the user is redirected to
+the login page.
+If the request method is POST, a new category is created
+in the database with the returned values. The image is
+stored in the upload folder.
+If the request method is GET, the new product page is
+rendered.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productAtom">
+<code class="descclassname">application.</code><code class="descname">productAtom</code><span class="sig-paren">(</span><em>category_name</em>, <em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.productAtom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atom API to get info about a given product and category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productJSON">
+<code class="descclassname">application.</code><code class="descname">productJSON</code><span class="sig-paren">(</span><em>category_name</em>, <em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.productJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON API to get info about a given product and category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productXML">
+<code class="descclassname">application.</code><code class="descname">productXML</code><span class="sig-paren">(</span><em>category_name</em>, <em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.productXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML API to get info about a given product and category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productsAtom">
+<code class="descclassname">application.</code><code class="descname">productsAtom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.productsAtom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atom API to get info about all products.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productsJSON">
+<code class="descclassname">application.</code><code class="descname">productsJSON</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.productsJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON API to get info about all products.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.productsXML">
+<code class="descclassname">application.</code><code class="descname">productsXML</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.productsXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML API to get info about all products.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.resetUserSession">
+<code class="descclassname">application.</code><code class="descname">resetUserSession</code><span class="sig-paren">(</span><em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#application.resetUserSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>resets the user data of the login session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.showCategory">
+<code class="descclassname">application.</code><code class="descname">showCategory</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.showCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the category and the products of the category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.showGroceryStore">
+<code class="descclassname">application.</code><code class="descname">showGroceryStore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.showGroceryStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the grocerystore with all categories
+and all products existing in the database.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.showProduct">
+<code class="descclassname">application.</code><code class="descname">showProduct</code><span class="sig-paren">(</span><em>category_name</em>, <em>product_name</em><span class="sig-paren">)</span><a class="headerlink" href="#application.showProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show one given product of a given category.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.storeUserData">
+<code class="descclassname">application.</code><code class="descname">storeUserData</code><span class="sig-paren">(</span><em>username</em>, <em>email</em>, <em>picture</em>, <em>ext_user_id</em>, <em>google_credentials=None</em>, <em>fb_access_token=None</em><span class="sig-paren">)</span><a class="headerlink" href="#application.storeUserData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the user data
+given by Google or Facebook
+in the login session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.uploads">
+<code class="descclassname">application.</code><code class="descname">uploads</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#application.uploads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locates the given file in the upload directory and shows
+it in the browser.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">Python Modules</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="database_setup.html"
+                        title="next chapter">database_setup.py</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/application.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database_setup.html" title="database_setup.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Python Modules"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Lisa Kugler.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

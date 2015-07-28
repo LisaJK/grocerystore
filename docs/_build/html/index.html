@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to Lisa’s Grocery Store’s documentation! &mdash; Lisa&#39;s Grocery Store 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lisa&#39;s Grocery Store 1.0 documentation" href="#" />
+    <link rel="next" title="Python Modules" href="modules.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Python Modules"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-lisa-s-grocery-store-s-documentation">
+<h1>Welcome to Lisa&#8217;s Grocery Store&#8217;s documentation!<a class="headerlink" href="#welcome-to-lisa-s-grocery-store-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Lisa&#8217;s Grocery Store is an implementation of the Item Catalog project specified in the Udacity Full
+Stack Web Developer Nanodegree.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://github.com/LisaJK/grocerystore/blob/master/README.txt">https://github.com/LisaJK/grocerystore/blob/master/README.txt</a></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004">https://www.udacity.com/course/full-stack-web-developer-nanodegree&#8211;nd004</a></p>
+</div>
+<div class="section" id="general-description">
+<h2>General Description<a class="headerlink" href="#general-description" title="Permalink to this headline">¶</a></h2>
+<p>&#8220;Lisa&#8217;s Grocery Store&#8221; is a web application that provides a list of products
+within a variety of product categories.
+It integrates user registration and authentication via Google or Facebook.
+Authenticated users have the ability to post, edit, or delete their own products.</p>
+<p><strong>Additional Functionality:</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>API Endpoints: Apart from the required JSON endpoints, the app has also an</dt>
+<dd><p class="first last">implementation of XML and Atom endpoints.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>CRUD: Read:    A product image field is added which can be read from the</dt>
+<dd><p class="first last">database and displayed on the page.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>CRUD: Create:  A product image field can be included when a new product is</dt>
+<dd><p class="first last">created in the database.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>CRUD: Update:  For already existing products, product images can be added,</dt>
+<dd><p class="first last">changed and deleted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>CRUD: Delete:  The function is implemented using POST requests and nonces to</dt>
+<dd><p class="first last">prevent cross-site request forgeries (CSRF).</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Comments:      Comments are (hopefully ;-)) thorough and concise.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Install Vagrant and Virtual Box as described in the course materials of the
+&#8220;Full Stack Foundations&#8221;.</li>
+<li>Clone the repository from GitHub
+$ git clone <a class="reference external" href="https://github.com/LisaJK/grocerystore.git">https://github.com/LisaJK/grocerystore.git</a></li>
+<li>Launch the Vagrant VM.</li>
+<li>Move to the directory &#8220;/vagrant/catalog&#8221;</li>
+<li>Run the application within the VM by typing &#8220;python application.py&#8221; in the
+console.</li>
+<li>Access the application by visiting &#8220;<a class="reference external" href="http://localhost:8000">http://localhost:8000</a>&#8221; on your browser.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The app was developed and tested with Chrome Version 43.0.2357.134 m.
+It was also tested with Firefox 39.0.
+In IE you might have to add <a class="reference external" href="https://accounts.google.com">https://accounts.google.com</a> to your trusted sites
+to enable Google Login (Facebook resp.).</p>
+</div>
+</div>
+<div class="section" id="project-folders-and-files">
+<h2>Project Folders and Files<a class="headerlink" href="#project-folders-and-files" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>README.txt:</dt>
+<dd><p class="first last">File containing all necessary information how to download and run the project.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>application.py:</dt>
+<dd><p class="first last">This python file contains the server-side implementation of the app.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>database_setup.py:</dt>
+<dd><p class="first last">This python file contains the setup of the database &#8220;grocery_store.db&#8221;.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>load_grocery_store.py:</dt>
+<dd><p class="first last">Run this python file to add some initial users, product categories and
+products to the database &#8220;grocery_store_db&#8221;.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>templates folder:</dt>
+<dd><p class="first last">This folder contains all Flask templates of the app.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li>category.html</li>
+<li>deleteCategory.html</li>
+<li>deleteProduct.html</li>
+<li>editCategory.html</li>
+<li>editProduct.html</li>
+<li>layout.html</li>
+<li>login.html</li>
+<li>newCategory.html</li>
+<li>newProduct.html</li>
+<li>product.html</li>
+<li>products.html</li>
+<li>showCategory.html</li>
+<li>showGroceryStore.html</li>
+<li>showProduct.html</li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="6">
+<li>static folder:<ul>
+<li>styles.css: CSS file containing the styles applied to the html files.</li>
+<li>vegetables-752156_1280.jpg: background image.</li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="7">
+<li><dl class="first docutils">
+<dt>uploads folder:</dt>
+<dd><p class="first last">Empty folder used to store product images uploaded for products.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>docs folder:</dt>
+<dd><p class="first last">A folder docs containing the documentation created using Sphinx.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">JSON files containing OAuth2.0 parameters:
+- client_secret_fb.json
+- client_secret_g.json</p>
+</li>
+</ol>
+</div>
+<div class="section" id="python-modules">
+<h2>Python modules<a class="headerlink" href="#python-modules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Python Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="application.html">application.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_setup.html">database_setup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load_grocery_store.html">load_grocery_store.py</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="api-endpoints">
+<h2>API Endpoints<a class="headerlink" href="#api-endpoints" title="Permalink to this headline">¶</a></h2>
+<p>JSON:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://localhost:8000/grocerystore/categories/JSON">http://localhost:8000/grocerystore/categories/JSON</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore/products/JSON">http://localhost:8000/grocerystore/products/JSON</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/products/JSON</li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/&lt;product_name&gt;/JSON</li>
+</ul>
+<p>XML:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://localhost:8000/grocerystore/categories/XML">http://localhost:8000/grocerystore/categories/XML</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore/products/XML">http://localhost:8000/grocerystore/products/XML</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/products/XML</li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/&lt;product_name&gt;/XML</li>
+</ul>
+<p>Atom:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://localhost:8000/grocerystore/categories/Atom">http://localhost:8000/grocerystore/categories/Atom</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore/products/Atom">http://localhost:8000/grocerystore/products/Atom</a></li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/products/Atom</li>
+<li><a class="reference external" href="http://localhost:8000/grocerystore">http://localhost:8000/grocerystore</a>/&lt;category_name&gt;/&lt;product_name&gt;/Atom</li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+<div class="section" id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="mailto:lisa&#46;kugler&#37;&#52;&#48;googlemail&#46;com">lisa<span>&#46;</span>kugler<span>&#64;</span>googlemail<span>&#46;</span>com</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to Lisa&#8217;s Grocery Store&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#general-description">General Description</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a class="reference internal" href="#project-folders-and-files">Project Folders and Files</a></li>
+<li><a class="reference internal" href="#python-modules">Python modules</a></li>
+<li><a class="reference internal" href="#api-endpoints">API Endpoints</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#contact">Contact</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">Python Modules</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Python Modules"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Lisa Kugler.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

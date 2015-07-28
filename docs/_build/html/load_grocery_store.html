@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>load_grocery_store.py &mdash; Lisa&#39;s Grocery Store 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lisa&#39;s Grocery Store 1.0 documentation" href="index.html" />
+    <link rel="up" title="Python Modules" href="modules.html" />
+    <link rel="prev" title="database_setup.py" href="database_setup.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database_setup.html" title="database_setup.py"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-load_grocery_store">
+<span id="load-grocery-store-py"></span><h1>load_grocery_store.py<a class="headerlink" href="#module-load_grocery_store" title="Permalink to this headline">¶</a></h1>
+<p>Populates the database of Lisa&#8217;s Grocery Store with a few
+Users, Categories and Products.</p>
+<dl class="data">
+<dt id="load_grocery_store.DBSession">
+<code class="descclassname">load_grocery_store.</code><code class="descname">DBSession</code><em class="property"> = sessionmaker(class_='Session',autoflush=True, bind=Engine(sqlite:///grocery_store.db), autocommit=False, expire_on_commit=True)</em><a class="headerlink" href="#load_grocery_store.DBSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>A DBSession() instance establishes all conversations with the database
+and represents a &#8220;staging zone&#8221; for all the objects loaded into the
+database session object. Any change made against the objects in the
+session won&#8217;t be persisted into the database until you call
+session.commit(). If you&#8217;re not happy about the changes, you can
+revert all of them back to the last commit by calling
+session.rollback().</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="load_grocery_store.engine">
+<code class="descclassname">load_grocery_store.</code><code class="descname">engine</code><em class="property"> = Engine(sqlite:///grocery_store.db)</em><a class="headerlink" href="#load_grocery_store.engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind the engine to the metadata of the Base class so that the
+declaratives can be accessed through a DBSession instance.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="database_setup.html"
+                        title="previous chapter">database_setup.py</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/load_grocery_store.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="database_setup.html" title="database_setup.py"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lisa&#39;s Grocery Store 1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >Python Modules</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Lisa Kugler.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

@@ -1,10 +1,4 @@
-"""This module contains all functions of Lisa's Grocery Store.
-
-   Lisa's Grocery Store is a web application that provides a list of products
-   within a variety of product categories. It integrates user registration and
-   authentication via Google or Facebook. Authenticated users have the ability
-   to post, edit, or delete their own products.
-"""
+"""This module contains the server functionality of Lisa's Grocery Store."""
 from flask import Flask, render_template, request, redirect, url_for
 from flask import session as login_session
 from flask import make_response, flash, jsonify, send_from_directory
