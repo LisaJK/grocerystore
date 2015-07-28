@@ -112,8 +112,8 @@ def productsXML():
     allProducts = session.query(Product).all()
     products = ET.Element('products')
     for product in allProducts:
-        prod = buildProductXML(product)
-        products.append(prod)
+        prod = ET.SubElement(products, 'product')
+        buildProductXML(prod, product)
     return createXMLResponse(products)
 
 
@@ -125,8 +125,8 @@ def categoryXML(category_name):
         category_name=category.name).all()
     products = ET.Element('products')
     for product in allProducts:
-        prod = buildProductXML(product)
-        products.append(prod)
+        prod = ET.SubElement(products, 'product')
+        buildProductXML(prod, product)
     return createXMLResponse(products)
 
 
@@ -134,13 +134,13 @@ def categoryXML(category_name):
 def productXML(category_name, product_name):
     """XML API to get info about a given product and category."""
     product = session.query(Product).filter_by(name=product_name).one()
-    prod = buildProductXML(product)
+    prod = ET.Element('product')
+    buildProductXML(prod, product)
     return createXMLResponse(prod)
 
 
-def buildProductXML(product):
+def buildProductXML(prod, product):
     """ Builds up the XML tree for a product."""
-    prod = ET.Element('product')
     name = ET.SubElement(prod, 'name')
     name.text = product.name
     description = ET.SubElement(prod, 'description')
@@ -148,7 +148,7 @@ def buildProductXML(product):
     price = ET.SubElement(prod, 'price')
     price.text = product.price
     image = ET.SubElement(prod, 'image')
-    image.text = product.image_file_name,
+    image.text = product.image_file_name
     category = ET.SubElement(prod, 'category')
     category.text = product.category_name
     user_id = ET.SubElement(prod, 'user_id')
@@ -212,7 +212,7 @@ def categoryAtom(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     feed = AtomFeed('Category',
                     feed_url=request.url,
-                    url=url_for('showCategory', category.name))
+                    url=url_for('showCategory', category_name=category.name))
     products = session.query(Product).filter_by(
         category_name=category.name).all()
     for product in products:
@@ -442,7 +442,9 @@ def deleteProduct(category_name, product_name):
        rendered if the user is the owner of the product.
     """
     if 'username' not in login_session.keys():
-        login_session['redirect_to'] = url_for('deleteProduct')
+        login_session['redirect_to'] = url_for('deleteProduct',
+                                               category_name=category_name,
+                                               product_name=product_name)
         return redirect(url_for('login'))
     deletedProduct = (session.query(Product).filter_by(
         name=product_name, category_name=category_name).one())
@@ -450,7 +452,7 @@ def deleteProduct(category_name, product_name):
         # delete the image of the product
         if deletedProduct.image_file_name:
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   deleteProduct.image_file_name))
+                                   deletedProduct.image_file_name))
         session.delete(deletedProduct)
         session.commit()
         return redirect(url_for('showCategory', category_name=category_name))
@@ -623,7 +625,7 @@ def gconnect():
        First, obtain the authorization code from the POST, update
        the authorization code into a credentials object and check
        if the access token within the credentials object is valid.
-       After having checked that the access token is used for the 
+       After having checked that the access token is used for the
        intended user and app, get the user info and store the user
        data for later use in the login session.
     """
@@ -885,8 +887,11 @@ def csrf_protect():
        a Forbidden is raised."""
     if request.method == 'POST':
         token = login_session.pop('state', None)
-        if not token or(token != request.form.get('state')
-                        and token != request.args.get('state')):
+        state = request.form.get('state')
+        if not state:
+            state = request.args.get('state')
+
+        if not token or not state or token != state:
             response = make_response(json.dumps('Invalid state parameter.'),
                                      403)
             response.headers['Content-Type'] = 'application/json'

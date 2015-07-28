@@ -24,8 +24,10 @@ Additional Functionality:
                  prevent cross-site request forgeries (CSRF).
 - Comments:      Comments are (hopefully ;-)) thorough and concise. Comments are
                  mainly presented as docstrings and are integrated in the 
-                 documentation created using Sphinx 
-                 (start with: /docs/_build/html/index.html).
+                 documentation created using Sphinx.
+
+For detailed information, please read the documentation created using Sphinx.
+Start with: /docs/_build/html/index.html
 ------------------------------------------------------------------------------
 
 
@@ -41,10 +43,13 @@ GETTING STARTED
 
 4. Move to the directory "/vagrant/catalog"
 
-5. Run the application within the VM by typing "python application.py" in the
+5. Create and populate the database within the VM by typing 
+   "load_grocery_store.py" in the console.
+
+6. Run the application within the VM by typing "python application.py" in the
    console.
 
-6. Access the application by visiting "http://localhost:8000" on your browser.
+7. Access the application by visiting "http://localhost:8000" on your browser.
 
 NOTE: The app was developed and tested with Chrome Version 43.0.2357.134 m.
       It was also tested with Firefox 39.0.

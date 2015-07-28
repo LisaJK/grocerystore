@@ -121,10 +121,10 @@ endobj
 << /A << /S /URI /Type /Action /URI (https://github.com/LisaJK/grocerystore.git) >> /Border [ 0 0 0 ] /Rect [ 260.3157 246.6394 443.7257 258.6394 ] /Subtype /Link /Type /Annot >>
 endobj
 39 0 obj
-<< /A << /S /URI /Type /Action /URI (http://localhost:8000) >> /Border [ 0 0 0 ] /Rect [ 215.5157 174.6394 305.0157 186.6394 ] /Subtype /Link /Type /Annot >>
+<< /A << /S /URI /Type /Action /URI (http://localhost:8000) >> /Border [ 0 0 0 ] /Rect [ 215.5157 156.6394 305.0157 168.6394 ] /Subtype /Link /Type /Annot >>
 endobj
 40 0 obj
-<< /A << /S /URI /Type /Action /URI (https://accounts.google.com) >> /Border [ 0 0 0 ] /Rect [ 174.2744 104.8394 299.0328 116.8394 ] /Subtype /Link /Type /Annot >>
+<< /A << /S /URI /Type /Action /URI (https://accounts.google.com) >> /Border [ 0 0 0 ] /Rect [ 174.2744 86.83937 299.0328 98.83937 ] /Subtype /Link /Type /Annot >>
 endobj
 41 0 obj
 << /Annots [ 35 0 R 36 0 R 38 0 R 39 0 R 40 0 R ] /Contents 164 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 159 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] >> /Rotate 0 
@@ -451,7 +451,7 @@ endobj
 << /Outlines 144 0 R /PageLabels 175 0 R /PageMode /UseNone /Pages 159 0 R /Type /Catalog >>
 endobj
 143 0 obj
-<< /Author () /CreationDate <rst2pdf.createpdf.PDFDate instance at 0x03D59D28> /Creator (\(unspecified\)) /Keywords () /Producer (ReportLab PDF Library - www.reportlab.com) /Subject (\(unspecified\)) 
+<< /Author () /CreationDate <rst2pdf.createpdf.PDFDate instance at 0x03DFEF80> /Creator (\(unspecified\)) /Keywords () /Producer (ReportLab PDF Library - www.reportlab.com) /Subject (\(unspecified\)) 
   /Title () >>
 endobj
 144 0 obj
@@ -815,7 +815,7 @@ Q
 endstream
 endobj
 164 0 obj
-<< /Length 9607 >>
+<< /Length 10010 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -1294,7 +1294,7 @@ q
 1 0 0 1 23 -3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Run the application within the VM by typing "python application.py" in the console.) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Create and populate the database within the VM by typing "load_grocery_store.py" in the console.) Tj T* ET
 Q
 Q
 q
@@ -1317,6 +1317,30 @@ Q
 q
 1 0 0 1 23 -3 cm
 q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Run the application within the VM by typing "python application.py" in the console.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 40.01575 171.6394 cm
+Q
+q
+1 0 0 1 40.01575 159.6394 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (7.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
 BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Access the application by visiting ") Tj 0 0 .501961 rg (http://localhost:8000) Tj 0 0 0 rg (" on your browser.) Tj T* ET
 Q
 Q
@@ -1324,13 +1348,13 @@ q
 Q
 Q
 q
-1 0 0 1 40.01575 177.6394 cm
+1 0 0 1 40.01575 159.6394 cm
 Q
 q
-1 0 0 1 40.01575 165.6394 cm
+1 0 0 1 40.01575 147.6394 cm
 Q
 q
-1 0 0 1 40.01575 84.83937 cm
+1 0 0 1 40.01575 66.83937 cm
 .933333 .933333 .933333 rg
 n 0 80.8 515.2441 -80.8 re f*
 0 0 0 rg
@@ -1361,7 +1385,7 @@ n 515.2441 0 m 515.2441 80.8 l S
 Q
 Q
 q
-1 0 0 1 40.01575 78.83937 cm
+1 0 0 1 40.01575 60.83937 cm
 Q
 q
 1 0 0 1 34.01575 807.2126 cm
@@ -5047,39 +5071,39 @@ xref
 0000030398 00000 n
 0000034359 00000 n
 0000034495 00000 n
-0000044160 00000 n
-0000055011 00000 n
-0000063293 00000 n
-0000072020 00000 n
-0000080602 00000 n
-0000087332 00000 n
-0000095270 00000 n
-0000095406 00000 n
-0000107397 00000 n
-0000110040 00000 n
-0000111347 00000 n
-0000111546 00000 n
-0000111584 00000 n
-0000111622 00000 n
-0000111660 00000 n
-0000111698 00000 n
-0000111736 00000 n
-0000111774 00000 n
-0000111812 00000 n
-0000111850 00000 n
-0000111888 00000 n
-0000111926 00000 n
-0000111964 00000 n
-0000112002 00000 n
-0000112040 00000 n
-0000112079 00000 n
+0000044564 00000 n
+0000055415 00000 n
+0000063697 00000 n
+0000072424 00000 n
+0000081006 00000 n
+0000087736 00000 n
+0000095674 00000 n
+0000095810 00000 n
+0000107801 00000 n
+0000110444 00000 n
+0000111751 00000 n
+0000111950 00000 n
+0000111988 00000 n
+0000112026 00000 n
+0000112064 00000 n
+0000112102 00000 n
+0000112140 00000 n
+0000112178 00000 n
+0000112216 00000 n
+0000112254 00000 n
+0000112292 00000 n
+0000112330 00000 n
+0000112368 00000 n
+0000112406 00000 n
+0000112444 00000 n
+0000112483 00000 n
 trailer
 << /ID 
  % ReportLab generated PDF document -- digest (http://www.reportlab.com)
  [(-\270/\215\023\374\232\255\017j\310\301DYu\363) (-\270/\215\023\374\232\255\017j\310\301DYu\363)]
  /Info 143 0 R /Root 142 0 R /Size 191 >>
 startxref
-112118
+112522
 %%EOF
 %PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
@@ -5204,10 +5228,10 @@ endobj
 << /A << /S /URI /Type /Action /URI (https://github.com/LisaJK/grocerystore.git) >> /Border [ 0 0 0 ] /Rect [ 260.3157 246.6394 443.7257 258.6394 ] /Subtype /Link /Type /Annot >>
 endobj
 39 0 obj
-<< /A << /S /URI /Type /Action /URI (http://localhost:8000) >> /Border [ 0 0 0 ] /Rect [ 215.5157 174.6394 305.0157 186.6394 ] /Subtype /Link /Type /Annot >>
+<< /A << /S /URI /Type /Action /URI (http://localhost:8000) >> /Border [ 0 0 0 ] /Rect [ 215.5157 156.6394 305.0157 168.6394 ] /Subtype /Link /Type /Annot >>
 endobj
 40 0 obj
-<< /A << /S /URI /Type /Action /URI (https://accounts.google.com) >> /Border [ 0 0 0 ] /Rect [ 174.2744 104.8394 299.0328 116.8394 ] /Subtype /Link /Type /Annot >>
+<< /A << /S /URI /Type /Action /URI (https://accounts.google.com) >> /Border [ 0 0 0 ] /Rect [ 174.2744 86.83937 299.0328 98.83937 ] /Subtype /Link /Type /Annot >>
 endobj
 41 0 obj
 << /Annots [ 35 0 R 36 0 R 38 0 R 39 0 R 40 0 R ] /Contents 164 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 159 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] >> /Rotate 0 
@@ -5534,7 +5558,7 @@ endobj
 << /Outlines 144 0 R /PageLabels 175 0 R /PageMode /UseNone /Pages 159 0 R /Type /Catalog >>
 endobj
 143 0 obj
-<< /Author () /CreationDate <rst2pdf.createpdf.PDFDate instance at 0x03C77350> /Creator (\(unspecified\)) /Keywords () /Producer (ReportLab PDF Library - www.reportlab.com) /Subject (\(unspecified\)) 
+<< /Author () /CreationDate <rst2pdf.createpdf.PDFDate instance at 0x03942378> /Creator (\(unspecified\)) /Keywords () /Producer (ReportLab PDF Library - www.reportlab.com) /Subject (\(unspecified\)) 
   /Title () >>
 endobj
 144 0 obj
@@ -5898,7 +5922,7 @@ Q
 endstream
 endobj
 164 0 obj
-<< /Length 9607 >>
+<< /Length 10010 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -6377,7 +6401,7 @@ q
 1 0 0 1 23 -3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Run the application within the VM by typing "python application.py" in the console.) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Create and populate the database within the VM by typing "load_grocery_store.py" in the console.) Tj T* ET
 Q
 Q
 q
@@ -6400,6 +6424,30 @@ Q
 q
 1 0 0 1 23 -3 cm
 q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Run the application within the VM by typing "python application.py" in the console.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 40.01575 171.6394 cm
+Q
+q
+1 0 0 1 40.01575 159.6394 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (7.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
 BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Access the application by visiting ") Tj 0 0 .501961 rg (http://localhost:8000) Tj 0 0 0 rg (" on your browser.) Tj T* ET
 Q
 Q
@@ -6407,13 +6455,13 @@ q
 Q
 Q
 q
-1 0 0 1 40.01575 177.6394 cm
+1 0 0 1 40.01575 159.6394 cm
 Q
 q
-1 0 0 1 40.01575 165.6394 cm
+1 0 0 1 40.01575 147.6394 cm
 Q
 q
-1 0 0 1 40.01575 84.83937 cm
+1 0 0 1 40.01575 66.83937 cm
 .933333 .933333 .933333 rg
 n 0 80.8 515.2441 -80.8 re f*
 0 0 0 rg
@@ -6444,7 +6492,7 @@ n 515.2441 0 m 515.2441 80.8 l S
 Q
 Q
 q
-1 0 0 1 40.01575 78.83937 cm
+1 0 0 1 40.01575 60.83937 cm
 Q
 q
 1 0 0 1 34.01575 807.2126 cm
@@ -10130,37 +10178,37 @@ xref
 0000030410 00000 n
 0000034371 00000 n
 0000034507 00000 n
-0000044172 00000 n
-0000055660 00000 n
-0000064443 00000 n
-0000073172 00000 n
-0000081460 00000 n
-0000088387 00000 n
-0000095319 00000 n
-0000095455 00000 n
-0000107446 00000 n
-0000110089 00000 n
-0000111396 00000 n
-0000111595 00000 n
-0000111633 00000 n
-0000111671 00000 n
-0000111709 00000 n
-0000111747 00000 n
-0000111785 00000 n
-0000111823 00000 n
-0000111861 00000 n
-0000111899 00000 n
-0000111937 00000 n
-0000111975 00000 n
-0000112013 00000 n
-0000112051 00000 n
-0000112089 00000 n
-0000112128 00000 n
+0000044576 00000 n
+0000056064 00000 n
+0000064847 00000 n
+0000073576 00000 n
+0000081864 00000 n
+0000088791 00000 n
+0000095723 00000 n
+0000095859 00000 n
+0000107850 00000 n
+0000110493 00000 n
+0000111800 00000 n
+0000111999 00000 n
+0000112037 00000 n
+0000112075 00000 n
+0000112113 00000 n
+0000112151 00000 n
+0000112189 00000 n
+0000112227 00000 n
+0000112265 00000 n
+0000112303 00000 n
+0000112341 00000 n
+0000112379 00000 n
+0000112417 00000 n
+0000112455 00000 n
+0000112493 00000 n
+0000112532 00000 n
 trailer
 << /ID 
  % ReportLab generated PDF document -- digest (http://www.reportlab.com)
  [(-\270/\215\023\374\232\255\017j\310\301DYu\363) (-\270/\215\023\374\232\255\017j\310\301DYu\363)]
  /Info 143 0 R /Root 142 0 R /Size 191 >>
 startxref
-112167
+112571
 %%EOF
