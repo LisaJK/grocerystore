@@ -44,7 +44,7 @@ GETTING STARTED
 4. Move to the directory "/vagrant/catalog"
 
 5. Create and populate the database within the VM by typing 
-   "load_grocery_store.py" in the console.
+   "python load_grocery_store.py" in the console.
 
 6. Run the application within the VM by typing "python application.py" in the
    console.

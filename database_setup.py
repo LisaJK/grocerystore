@@ -62,7 +62,7 @@ class Category(Base):
     description = Column(String(250))
     """description (Column): a description of the category."""
 
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(ForeignKey('user.id'))
     """user_id (Column): reference to the owner of the category."""
 
     user = relationship(User)
@@ -97,13 +97,12 @@ class Product(Base):
             The image is stored in the upload folder.
     """
 
-    category_name = Column(Integer,
-                           ForeignKey('category.name'))
+    category_name = Column(ForeignKey('category.name'))
     """category_name (Column): the category the product belongs to."""
 
     category = relationship(Category)
 
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(ForeignKey('user.id'))
     """user_id (Column): the id of the owner of the product."""
 
     user = relationship(User)
@@ -121,7 +120,6 @@ class Product(Base):
             'category_name': self.category_name,
             'user_id': self.user_id
         }
-
 
 engine = create_engine('sqlite:///grocery_store.db')
 
