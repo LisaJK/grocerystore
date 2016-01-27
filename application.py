@@ -42,7 +42,8 @@ FB_APP_SECRET = json.loads(
 XML_VERSION = '<?xml version="1.0" encoding="UTF-8"?>'
 
 
-UPLOAD_FOLDER = './uploads'
+# UPLOAD_FOLDER = './uploads
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 """ str: name of the folder where uploaded images can be found."""
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
